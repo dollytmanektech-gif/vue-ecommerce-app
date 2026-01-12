@@ -3,7 +3,6 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import About from '../views/About-Us.vue'
-import Checkout from '../views/checkout.vue'
 import Product from '../views/products.vue'
 import { isAuthenticated } from '../api/auth'
 
