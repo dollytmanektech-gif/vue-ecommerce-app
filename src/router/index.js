@@ -3,7 +3,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import About from '../views/About-Us.vue'
-import Product from '../views/products.vue'
+import Product from '../views/Products.vue'
 import { isAuthenticated } from '../api/auth'
 
 const routes = [
