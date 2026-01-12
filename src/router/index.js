@@ -22,11 +22,6 @@ const routes = [
   {
     path:'/products',
     component:Product
-  },
-   {
-    path: '/checkout',
-    component: Checkout,
-    meta: { requiresAuth: true }
   }
 ]
 
