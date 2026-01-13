@@ -76,21 +76,24 @@ import Footer from '../components/Footer.vue'
 
 const categories = [
   {
-    name: "Electronics",
-    slug: "electronics",
-    image: new URL("../assets/images/products/headphone_1.jpg", import.meta.url).href,
+    name: "Furniture",
+    slug: "furniture",
+    image: new URL("../assets/images/products/furniture.jpg", import.meta.url)
+      .href,
   },
   {
-    name: "Bags",
-    slug: "bags",
-    image: new URL("../assets/images/products/purse_1.jpg", import.meta.url).href,
+    name: "Fragrances",
+    slug: "fragrances",
+    image: new URL("../assets/images/products/fragrances.jpg", import.meta.url)
+      .href,
   },
   {
-    name: "Fashion",
-    slug: "fashion",
-    image: new URL("../assets/images/products/women's_fashion.jpg", import.meta.url).href,
+    name: "Beauty",
+    slug: "beauty",
+    image: new URL("../assets/images/products/beauty.jpg", import.meta.url)
+      .href,
   },
-]
+];
 </script>
 
 <style scoped>

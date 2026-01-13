@@ -3,7 +3,7 @@
     <h3>Vue E-commerce Platform</h3>
      <ul class="nav-links">
       <li>
-        <router-link to="/dashboard" class="link" active-class="active">Home</router-link>
+        <router-link to="/" class="link" active-class="active">Home</router-link>
       </li>
       <li>
         <router-link to="/about" class="link" active-class="active">About</router-link>

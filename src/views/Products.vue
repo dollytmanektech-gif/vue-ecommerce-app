@@ -28,16 +28,16 @@
           <button
             v-for="category in categories"
             :key="category.slug"
-            @click="selectedCategory = category.slug; filterProducts()"
-            :class="['filter-btn', { active: selectedCategory === category.slug }]"
+            @click="
+              selectedCategory = category.slug;
+              filterProducts();
+            "
+            :class="[
+              'filter-btn',
+              { active: selectedCategory === category.slug },
+            ]"
           >
             {{ category.name }}
-          </button>
-          <button
-            @click="selectedCategory = 'all'; filterProducts()"
-            :class="['filter-btn', { active: selectedCategory === 'all' }]"
-          >
-            All Products
           </button>
         </div>
       </div>
@@ -45,8 +45,18 @@
       <!-- Products Count -->
       <div class="products-info">
         <p class="products-count">
-          Showing {{ filteredProducts.length }} of {{ products.length }} products
+          Showing {{ filteredProducts.length }} of
+          {{ products.length }} products
         </p>
+      </div>
+      <!-- SKELETON LOADER -->
+      <div v-if="isLoading" class="skeleton-grid">
+        <div v-for="n in 6" :key="n" class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line price"></div>
+        </div>
       </div>
 
       <!-- Products Grid -->
@@ -82,155 +92,85 @@
           <p class="no-results-icon">🔍</p>
           <h3>No products found</h3>
           <p>Try adjusting your search or filter criteria</p>
-          <button @click="clearFilters" class="clear-filters-btn">Clear Filters</button>
+          <button @click="clearFilters" class="clear-filters-btn">
+            Clear Filters
+          </button>
         </div>
       </div>
     </div>
-
     <Footer />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import Navbar from '../components/Navbar.vue'
-import Footer from '../components/Footer.vue'
+import { ref, computed, onMounted } from "vue";
+import Navbar from "../components/Navbar.vue";
+import Footer from "../components/Footer.vue";
+import { useRouter } from "vue-router";
 
 // Search and filter state
-const searchQuery = ref('')
-const selectedCategory = ref('all')
+const searchQuery = ref("");
+const selectedCategory = ref("all");
+const router = useRouter();
 
 // Categories
 const categories = [
-  {
-    name: "Electronics",
-    slug: "electronics",
-  },
-  {
-    name: "Bags",
-    slug: "bags",
-  },
-  {
-    name: "Fashion",
-    slug: "fashion",
-  },
-]
+  { name: "All", slug: "all" },
+  { name: "Furniture", slug: "furniture" },
+  { name: "Fragrances", slug: "fragrances" },
+  { name: "Beauty", slug: "beauty" },
+];
 
 // Products data
-const products = ref([
-  {
-    id: 1,
-    name: "Wireless Headphones Pro",
-    category: "Electronics",
-    categorySlug: "electronics",
-    price: 129.99,
-    image: new URL("../assets/images/products/headphone_1.jpg", import.meta.url).href,
-  },
-  {
-    id: 2,
-    name: "Premium Headphones",
-    category: "Electronics",
-    categorySlug: "electronics",
-    price: 199.99,
-    image: new URL("../assets/images/products/headphone_2.jpg", import.meta.url).href,
-  },
-  {
-    id: 3,
-    name: "Studio Headphones",
-    category: "Electronics",
-    categorySlug: "electronics",
-    price: 159.99,
-    image: new URL("../assets/images/products/headphone_3.jpg", import.meta.url).href,
-  },
-  {
-    id: 4,
-    name: "Designer Handbag",
-    category: "Bags",
-    categorySlug: "bags",
-    price: 89.99,
-    image: new URL("../assets/images/products/purse_1.jpg", import.meta.url).href,
-  },
-  {
-    id: 5,
-    name: "Leather Crossbody Bag",
-    category: "Bags",
-    categorySlug: "bags",
-    price: 79.99,
-    image: new URL("../assets/images/products/purse_2.jpg", import.meta.url).href,
-  },
-  {
-    id: 6,
-    name: "Elegant Clutch Bag",
-    category: "Bags",
-    categorySlug: "bags",
-    price: 69.99,
-    image: new URL("../assets/images/products/purse_3.jpg", import.meta.url).href,
-  },
-  {
-    id: 7,
-    name: "Stylish Tote Bag",
-    category: "Bags",
-    categorySlug: "bags",
-    price: 59.99,
-    image: new URL("../assets/images/products/purse_4.jpg", import.meta.url).href,
-  },
-  {
-    id: 8,
-    name: "Classic T-Shirt",
-    category: "Fashion",
-    categorySlug: "fashion",
-    price: 29.99,
-    image: new URL("../assets/images/products/tshirt_1.jpg", import.meta.url).href,
-  },
-  {
-    id: 9,
-    name: "Premium Cotton Tee",
-    category: "Fashion",
-    categorySlug: "fashion",
-    price: 34.99,
-    image: new URL("../assets/images/products/tshirt_2.jpg", import.meta.url).href,
-  },
-  {
-    id: 10,
-    name: "Designer T-Shirt",
-    category: "Fashion",
-    categorySlug: "fashion",
-    price: 39.99,
-    image: new URL("../assets/images/products/tshirt_3.jpg", import.meta.url).href,
-  },
-  {
-    id: 11,
-    name: "Women's Fashion Collection",
-    category: "Fashion",
-    categorySlug: "fashion",
-    price: 149.99,
-    image: new URL("../assets/images/products/women's_fashion.jpg", import.meta.url).href,
-  },
-])
+const products = ref([]);
+const isLoading = ref(false);
+async function fetchProducts() {
+  try {
+    isLoading.value = true;
+
+    const response = await fetch("https://dummyjson.com/products");
+    const data = await response.json();
+
+    products.value = data.products
+      .filter((product) => product.category !== "groceries")
+      .map((product) => ({
+        id: product.id,
+        name: product.title,
+        category: product.category,
+        categorySlug: product.category,
+        price: product.price,
+        image: product.thumbnail,
+      }));
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 // Filtered products computed property
 const filteredProducts = computed(() => {
-  let filtered = products.value
+  let filtered = products.value;
 
   // Filter by category
-  if (selectedCategory.value !== 'all') {
+  if (selectedCategory.value !== "all") {
     filtered = filtered.filter(
-      product => product.categorySlug === selectedCategory.value
-    )
+      (product) => product.categorySlug === selectedCategory.value
+    );
   }
 
   // Filter by search query
-  if (searchQuery.value.trim() !== '') {
-    const query = searchQuery.value.toLowerCase().trim()
+  if (searchQuery.value.trim() !== "") {
+    const query = searchQuery.value.toLowerCase().trim();
     filtered = filtered.filter(
-      product =>
+      (product) =>
         product.name.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query)
-    )
+    );
   }
 
-  return filtered
-})
+  return filtered;
+});
 
 // Filter products function
 function filterProducts() {
@@ -240,32 +180,31 @@ function filterProducts() {
 
 // Clear all filters
 function clearFilters() {
-  searchQuery.value = ''
-  selectedCategory.value = 'all'
+  searchQuery.value = "";
+  selectedCategory.value = "all";
 }
 
 // View product details
 function viewProduct(product) {
-  console.log('Viewing product:', product)
-  // You can navigate to a product detail page here
-  // router.push(`/products/${product.id}`)
+  router.push(`/products/${product.id}`);
 }
 
 // Add to cart
 function addToCart(product) {
-  console.log('Adding to cart:', product)
+  console.log("Adding to cart:", product);
   // You can implement cart functionality here
-  alert(`${product.name} added to cart!`)
+  alert(`${product.name} added to cart!`);
 }
 
 onMounted(() => {
-  // Check if there's a category filter in URL query params
-  const urlParams = new URLSearchParams(window.location.search)
-  const categoryParam = urlParams.get('category')
+  fetchProducts();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoryParam = urlParams.get("category");
   if (categoryParam) {
-    selectedCategory.value = categoryParam
+    selectedCategory.value = categoryParam;
   }
-})
+});
 </script>
 
 <style scoped>
@@ -576,6 +515,53 @@ onMounted(() => {
 @media (max-width: 480px) {
   .products-grid {
     grid-template-columns: 1fr;
+  }
+}
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+  padding: 20px;
+}
+
+.skeleton-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.skeleton-img {
+  height: 180px;
+  border-radius: 12px;
+  background: linear-gradient(100deg, #e0e0e0 30%, #f5f5f5 50%, #e0e0e0 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton-line {
+  height: 14px;
+  margin-top: 12px;
+  border-radius: 6px;
+  background: linear-gradient(100deg, #e0e0e0 30%, #f5f5f5 50%, #e0e0e0 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-line.price {
+  width: 40%;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
   }
 }
 </style>
