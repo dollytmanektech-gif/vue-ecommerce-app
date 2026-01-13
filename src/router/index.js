@@ -6,22 +6,32 @@ import About from '../views/About-Us.vue'
 import Product from '../views/Products.vue'
 import { isAuthenticated } from '../api/auth'
 import ProductDetails from '../views/ProductDetails.vue'
+import Cart from '../views/Cart.vue'
+import Checkout from '../views/Checkout.vue'
 
 const routes = [
   { path: '/', component: Dashboard, },
   { path: '/login', component: Login },
   { path: '/register', component: Register },
   {
-    path:'/about',
-    component:About,
+    path: '/about',
+    component: About,
   },
   {
-    path:'/products',
-    component:Product
+    path: '/products',
+    component: Product
   },
   {
-     path: '/products/:id',
-     component: ProductDetails
+    path: '/products/:id',
+    component: ProductDetails
+  },
+  {
+    path: '/cart',
+    component: Cart
+  },
+  {
+    path: '/checkout',
+    component: Checkout
   }
 ]
 

@@ -56,6 +56,7 @@
             class="category-card"
             v-for="category in categories"
             :key="category.slug"
+             @click="goToCategory(category.slug)"
           >
             <div class="category-image-wrapper">
               <img :src="category.image" :alt="category.name" />
@@ -73,6 +74,7 @@
 <script setup>
 import Navbar from '../components/Navbar.vue'
 import Footer from '../components/Footer.vue'
+import { useRouter } from "vue-router";
 
 const categories = [
   {
@@ -94,6 +96,14 @@ const categories = [
       .href,
   },
 ];
+const router = useRouter();
+
+const goToCategory = (slug) => {
+  router.push({
+    path: "/products",
+    query: { category: slug },
+  });
+};
 </script>
 
 <style scoped>

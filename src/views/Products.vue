@@ -107,11 +107,13 @@ import { ref, computed, onMounted } from "vue";
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 import { useRouter } from "vue-router";
+import { useCart } from '../composables/useCart'
 
 // Search and filter state
 const searchQuery = ref("");
 const selectedCategory = ref("all");
 const router = useRouter();
+const { addToCart } = useCart()
 
 // Categories
 const categories = [
@@ -190,11 +192,11 @@ function viewProduct(product) {
 }
 
 // Add to cart
-function addToCart(product) {
-  console.log("Adding to cart:", product);
-  // You can implement cart functionality here
-  alert(`${product.name} added to cart!`);
-}
+// function addToCart(product) {
+//   console.log("Adding to cart:", product);
+//   // You can implement cart functionality here
+//   alert(`${product.name} added to cart!`);
+// }
 
 onMounted(() => {
   fetchProducts();

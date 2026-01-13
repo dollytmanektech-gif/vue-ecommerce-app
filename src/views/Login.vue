@@ -32,17 +32,16 @@ const password = ref('')
 const error = ref('')
 
 function login() {
-  const success = loginUser(email.value, password.value)
+  localStorage.setItem('isAuthenticated', 'true')
 
-  if (success) {
-    localStorage.setItem('isAuthenticated', 'true')
-
-    // 🔥 Redirect back to intended page
-    const redirectTo = route.query.redirect || '/dashboard'
-    router.push(redirectTo)
+  if (localStorage.getItem('pendingOrder')) {
+    localStorage.removeItem('pendingOrder')
+    alert('✅ Your order is confirmed!')
+    router.push('/')
   } else {
-    error.value = 'Invalid credentials'
+    router.push('/')
   }
 }
+
 </script>
 

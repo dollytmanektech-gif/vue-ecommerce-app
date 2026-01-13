@@ -43,7 +43,7 @@ function register() {
     localStorage.setItem('isAuthenticated', 'true')
 
     // 🔁 Redirect to intended page or dashboard
-    const redirectTo = route.query.redirect || '/dashboard'
+    const redirectTo = route.query.redirect || '/'
     router.push(redirectTo)
   }
 }
