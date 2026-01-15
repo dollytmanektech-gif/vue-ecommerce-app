@@ -10,29 +10,58 @@
         <form class="checkout-form" @submit.prevent="placeOrder">
           <div class="form-group">
             <label>Full Name</label>
-            <input v-model="form.name" placeholder="John Doe" required />
+            <input
+              v-model="form.name"
+              placeholder="John Doe"
+              @blur="validateName"
+            />
+            <p v-if="errors.name" class="error">{{ errors.name }}</p>
           </div>
 
           <div class="form-group">
             <label>Email</label>
-            <input v-model="form.email" type="email" placeholder="john@email.com" required />
+            <input
+              v-model="form.email"
+              type="email"
+              placeholder="john@email.com"
+              @input="validateEmail"
+              @blur="validateEmail"
+            />
+            <p v-if="errors.email" class="error">{{ errors.email }}</p>
           </div>
 
           <div class="form-group">
             <label>Address</label>
-            <input v-model="form.address" placeholder="Street, Apartment, etc." required />
+            <input
+              v-model="form.address"
+              placeholder="Street, Apartment, etc."
+              @blur="validateAddress"
+            />
+            <p v-if="errors.address" class="error">{{ errors.address }}</p>
           </div>
 
-            <div class="form-group">
-              <label>City</label>
-              <input v-model="form.city" placeholder="City" required />
-            </div>
-            <div class="form-group">
-              <label>Zip Code</label>
-              <input v-model="form.zip" placeholder="123456" required />
-            </div>
+          <div class="form-group">
+            <label>City</label>
+            <input
+              v-model="form.city"
+              placeholder="City"
+              @blur="validateCity"
+            />
+            <p v-if="errors.city" class="error">{{ errors.city }}</p>
+          </div>
 
-          <button class="place-order-btn" type="submit">
+          <div class="form-group">
+            <label>Zip Code</label>
+            <input
+              v-model="form.zip"
+              placeholder="123456"
+              @input="validateZip"
+              @blur="validateZip"
+            />
+            <p v-if="errors.zip" class="error">{{ errors.zip }}</p>
+          </div>
+
+          <button class="place-order-btn" type="submit" :disabled="hasErrors">
             Place Order
           </button>
         </form>
@@ -45,7 +74,7 @@
 
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
 import Navbar from "../components/Navbar.vue";
@@ -62,7 +91,60 @@ const form = reactive({
   zip: "",
 });
 
+const errors = reactive({
+  name: "",
+  email: "",
+  address: "",
+  city: "",
+  zip: "",
+});
+
+/* ---------- Validators ---------- */
+
+const validateName = () => {
+  errors.name = form.name.trim() ? "" : "Full name is required";
+};
+
+const validateEmail = () => {
+  if (!form.email) {
+    errors.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = "Enter a valid email address";
+  } else {
+    errors.email = "";
+  }
+};
+
+const validateAddress = () => {
+  errors.address = form.address.trim() ? "" : "Address is required";
+};
+
+const validateCity = () => {
+  errors.city = form.city.trim() ? "" : "City is required";
+};
+
+const validateZip = () => {
+  if (!form.zip) {
+    errors.zip = "Zip code is required";
+  } else if (!/^\d{5,6}$/.test(form.zip)) {
+    errors.zip = "Enter a valid zip code";
+  } else {
+    errors.zip = "";
+  }
+};
+
+/* ---------- Form State ---------- */
+
+const hasErrors = computed(() => {
+  return Object.values(errors).some((error) => error);
+});
+
 function placeOrder() {
+  validateName();
+  validateEmail();
+  validateAddress();
+  validateCity();
+  validateZip();
   const isAuthenticated = localStorage.getItem("isAuthenticated");
 
   if (!isAuthenticated) {
@@ -164,5 +246,14 @@ function placeOrder() {
   background: #5f5bb3;
   transform: translateY(-1px);
 }
+.error {
+  color: #e63946;
+  font-size: 12px;
+  margin-top: 4px;
+}
 
+.place-order-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 </style>
