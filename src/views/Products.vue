@@ -78,9 +78,8 @@
             <p class="product-category">{{ product.category }}</p>
             <div class="product-footer">
               <span class="product-price">${{ product.price }}</span>
-              <button class="add-to-cart-btn" @click.stop="addToCart(product)">
-                Add to Cart
-              </button>
+              <button class="add-to-cart-btn" @click.stop="handleCartAction(product)">
+    {{ isInCart(product.id) ? 'Go to Cart' : 'Add to Cart' }}</button>
             </div>
           </div>
         </div>
@@ -113,7 +112,7 @@ import { useCart } from '../composables/useCart'
 const searchQuery = ref("");
 const selectedCategory = ref("all");
 const router = useRouter();
-const { addToCart } = useCart()
+const { addToCart,isInCart } = useCart()
 
 // Categories
 const categories = [
@@ -189,6 +188,13 @@ function clearFilters() {
 // View product details
 function viewProduct(product) {
   router.push(`/products/${product.id}`);
+}
+function handleCartAction(product) {
+  if (isInCart(product.id)) {
+    router.push('/cart')
+  } else {
+    addToCart(product)
+  }
 }
 
 // Add to cart

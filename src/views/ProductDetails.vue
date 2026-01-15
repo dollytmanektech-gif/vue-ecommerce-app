@@ -34,7 +34,8 @@
 
       <!-- Actions -->
       <div class="actions">
-        <button class="cart-btn">Add to Cart</button>
+        <button class="cart-btn"  @click.stop="handleCartAction(product)">
+    {{ isInCart(product.id) ? 'Go to Cart' : 'Add to Cart' }}</button>
         <button class="buy-btn">Buy Now</button>
       </div>
 
@@ -51,13 +52,16 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import Footer from '../components/Footer.vue'
+import { useCart } from '../composables/useCart'
 
 const route = useRoute()
+const router = useRouter();
 const product = ref(null)
 const isLoading = ref(false)
+const { addToCart,isInCart  } = useCart()
 
 async function fetchProductDetails() {
   try {
@@ -72,7 +76,13 @@ async function fetchProductDetails() {
     isLoading.value = false
   }
 }
-
+function handleCartAction(product) {
+  if (isInCart(product.id)) {
+    router.push('/cart')
+  } else {
+    addToCart(product)
+  }
+}
 onMounted(() => {
   fetchProductDetails()
 })

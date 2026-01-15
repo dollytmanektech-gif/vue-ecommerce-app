@@ -57,12 +57,16 @@ function decreaseQty(item) {
     },
     { deep: true }
   )
+   const isInCart = (id) =>
+    cart.value.some(item => item.id === id)
+
 
   return {
     cart,
     addToCart,
     removeFromCart,
     clearCart,
-    increaseQty, decreaseQty
+    increaseQty, decreaseQty,
+    isInCart
   }
 }
