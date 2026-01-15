@@ -21,7 +21,7 @@ export function useCart() {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        image: product.image || product.thumbnail,
         quantity: 1
       })
     } 
