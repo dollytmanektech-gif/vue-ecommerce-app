@@ -30,10 +30,6 @@
         <span class="dropdown-trigger"> My Profile </span>
 
         <ul class="dropdown-menu">
-          <li>
-            <router-link to="/myProfile">My Account</router-link>
-          </li>
-          <li>
             <router-link to="/orders">My Orders</router-link>
           </li>
           <li>
