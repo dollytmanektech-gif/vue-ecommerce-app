@@ -81,7 +81,7 @@ import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 
 const router = useRouter();
-const { clearCart } = useCart();
+const { clearCart, cart } = useCart();
 
 const form = reactive({
   name: "",
@@ -145,6 +145,9 @@ function placeOrder() {
   validateAddress();
   validateCity();
   validateZip();
+
+  if (hasErrors.value) return;
+
   const isAuthenticated = localStorage.getItem("isAuthenticated");
 
   if (!isAuthenticated) {
@@ -153,10 +156,35 @@ function placeOrder() {
     return;
   }
 
+  /* ---------- Create Order ---------- */
+
+  const order = {
+    id: `ORD-${Date.now()}`,
+    date: new Date().toLocaleDateString(),
+    status: "Confirmed",
+    customer: { ...form },
+    items: cart.value,
+    total: cart.value.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    ),
+  };
+
+  const userEmail = localStorage.getItem('userEmail');
+
+  const storageKey = `orders_${userEmail}`;
+
+  const existingOrders = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  existingOrders.unshift(order);
+
+  localStorage.setItem(storageKey, JSON.stringify(existingOrders));
+
   clearCart();
   localStorage.removeItem("pendingOrder");
+
   alert("✅ Your order is confirmed!");
-  router.push("/");
+  router.push("/orders");
 }
 </script>
 <style scoped>

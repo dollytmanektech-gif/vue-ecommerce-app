@@ -1,4 +1,5 @@
 <template>
+<Navbar />
   <div class="auth-container">
     <div class="card">
       <h2>Register</h2>
@@ -26,15 +27,19 @@
       </p>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { registerUser } from "../api/auth";
+import { useAuthStore } from "../stores/auth";
+import Navbar from "../components/Navbar.vue";
+import Footer from "../components/Footer.vue";
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const name = ref("");
 const email = ref("");
@@ -44,6 +49,7 @@ const errors = reactive({
   email: "",
   password: "",
 });
+
 const validateEmail = () => {
   if (!email.value) {
     errors.email = "Email is required";
@@ -71,22 +77,22 @@ const hasErrors = computed(() => {
 function register() {
   validateEmail();
   validatePassword();
-  const success = registerUser({
+
+  if (hasErrors.value) return;
+
+  const success = authStore.register({
     name: name.value,
     email: email.value,
     password: password.value,
   });
 
   if (success) {
-    // 🔐 Mark user as logged in
-    localStorage.setItem("isAuthenticated", "true");
-
-    // 🔁 Redirect to intended page or dashboard
     const redirectTo = route.query.redirect || "/";
     router.push(redirectTo);
   }
 }
 </script>
+
 <style scoped>
 .register {
   width: 108%;
@@ -101,6 +107,8 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
+.register:hover {
+  background: #4338ca;
+}
 </style>
 

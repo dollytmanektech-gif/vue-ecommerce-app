@@ -9,5 +9,21 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      // Load Google Identity Services script
+      window.onGoogleScriptLoad = function() {
+        window.googleScriptLoaded = true;
+        if (window.googleScriptReadyCallback) {
+          window.googleScriptReadyCallback();
+        }
+      };
+    </script>
+    <script 
+      src="https://accounts.google.com/gsi/client" 
+      async 
+      defer
+      onload="onGoogleScriptLoad()"
+      onerror="console.error('Failed to load Google Identity Services script')">
+    </script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 <template>
+ <!-- <Navbar /> -->
   <div class="auth-container">
     <div class="card">
       <h2>Login</h2>
@@ -22,24 +23,38 @@
           Register yourself
         </router-link>
       </p>
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <!-- Google Login -->
+      <div id="google-signin-button"></div>
     </div>
   </div>
+  <!-- <Footer /> -->
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { loginUser } from "../api/auth";
+import { useAuthStore } from "../stores/auth";
+import { useCheckoutStore } from "../stores/checkout";
+import Navbar from "../components/Navbar.vue";
+import Footer from "../components/Footer.vue";
 
 const router = useRouter();
 const route = useRoute();
-
+const authStore = useAuthStore();
+const checkoutStore = useCheckoutStore();
 const email = ref("");
 const password = ref("");
 const errors = reactive({
   email: "",
   password: "",
 });
+const CLIENT_ID =
+  "1077657055518-gk07ahsvifmeb7ruq5kainl6j9mj49gd.apps.googleusercontent.com";
 const validateEmail = () => {
   if (!email.value) {
     errors.email = "Email is required";
@@ -65,16 +80,44 @@ const hasErrors = computed(() => {
 });
 
 function login() {
-  localStorage.setItem("isAuthenticated", "true");
+  const success_login = authStore.login(email.value, password.value);
 
-  if (localStorage.getItem("pendingOrder")) {
-    localStorage.removeItem("pendingOrder");
-    alert("✅ Your order is confirmed!");
+  if (checkoutStore.pendingOrder) {
+    checkoutStore.confirmOrder();
+  }
+
+  if (success_login) {
     router.push("/");
   } else {
-    router.push("/");
+    alert("Invalid credentials");
   }
 }
+onMounted(async () => {
+  try {
+    await authStore.initGoogleLogin(
+      CLIENT_ID,
+      document.getElementById("google-signin-button")
+    );
+    
+    // Listen for successful Google sign-in
+    window.addEventListener('google-signin-success', () => {
+      if (checkoutStore.pendingOrder) {
+        checkoutStore.confirmOrder();
+      }
+      router.push("/");
+    });
+  } catch (error) {
+    console.error("Google Sign-In initialization failed:", error);
+    const el = document.getElementById("google-signin-button");
+    if (el) {
+      el.innerHTML = `
+        <button disabled style="opacity:0.6; width: 100%; padding: 10px;">
+          Google Sign-In unavailable
+        </button>
+      `;
+    }
+  }
+});
 </script>
 <style scoped>
 .login {
@@ -90,6 +133,19 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.login:hover {
+  background: #4338ca;
+}
 
+#google-signin-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#google-signin-button > div {
+  width: 100% !important;
+}
 </style>
 

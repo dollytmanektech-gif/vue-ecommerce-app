@@ -8,6 +8,7 @@ import { isAuthenticated } from '../api/auth'
 import ProductDetails from '../views/ProductDetails.vue'
 import Cart from '../views/Cart.vue'
 import Checkout from '../views/Checkout.vue'
+import Order from '../views/Order.vue'
 
 const routes = [
   { path: '/', component: Dashboard, },
@@ -32,12 +33,20 @@ const routes = [
   {
     path: '/checkout',
     component: Checkout
-  }
+  },
+  {
+  path: "/orders",
+  component: Order,
+}
+
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 };
+  },
 })
 
 router.beforeEach((to, from, next) => {
