@@ -1,5 +1,5 @@
 <template>
- <!-- <Navbar /> -->
+ <Navbar />
   <div class="auth-container">
     <div class="card">
       <h2>Login</h2>
@@ -31,7 +31,7 @@
       <div id="google-signin-button"></div>
     </div>
   </div>
-  <!-- <Footer /> -->
+  <Footer />
 </template>
 
 <script setup>
