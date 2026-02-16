@@ -26,7 +26,16 @@
         </div>
 
         <div class="order-footer">
-          <strong>Total: ${{ order.total }}</strong>
+          <div class="totals">
+            <p v-if="order.subtotal != null" class="meta">
+              Subtotal: ${{ order.subtotal }}
+              <span v-if="order.coupon"> • Coupon: {{ order.coupon }}</span>
+              <span v-if="order.discount != null && order.discount > 0">
+                • Discount: -${{ Number(order.discount).toFixed(2) }}
+              </span>
+            </p>
+            <strong>Total: ${{ Number(order.total).toFixed(2) }}</strong>
+          </div>
         </div>
       </div>
     </div>
@@ -95,5 +104,11 @@ const userOrders = computed(() =>
   text-align: right;
   font-size: 16px;
   margin-top: 10px;
+}
+
+.meta {
+  margin: 0 0 6px;
+  color: #666;
+  font-size: 13px;
 }
 </style>

@@ -7,6 +7,22 @@
         <h2>Checkout</h2>
         <p class="subtitle">Please enter your shipping details</p>
 
+        <div class="order-summary" v-if="cart.length > 0">
+          <h3>Order Summary</h3>
+          <div class="row">
+            <span>Subtotal</span>
+            <strong>${{ subtotal.toFixed(2) }}</strong>
+          </div>
+          <div class="row" v-if="coupon?.code">
+            <span>Coupon <strong>{{ coupon.code }}</strong></span>
+            <strong class="discount">- ${{ discountAmount.toFixed(2) }}</strong>
+          </div>
+          <div class="row total">
+            <span>Total</span>
+            <strong>${{ total.toFixed(2) }}</strong>
+          </div>
+        </div>
+
         <form class="checkout-form" @submit.prevent="placeOrder">
           <div class="form-group">
             <label>Full Name</label>
@@ -83,7 +99,7 @@ import { useAuthStore } from "../stores/auth";
 import { useOrderStore } from "../stores/order";
 
 const router = useRouter();
-const { clearCart, cart } = useCart();
+const { clearCart, cart, coupon, subtotal, discountAmount, total } = useCart();
 
 const authStore = useAuthStore();
 const orderStore = useOrderStore();
@@ -164,10 +180,10 @@ function placeOrder() {
     status: "Confirmed",
     customer: { ...form },
     items: cart.value,
-    total: cart.value.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    ),
+    subtotal: subtotal.value,
+    discount: discountAmount.value,
+    coupon: coupon.value?.code || null,
+    total: total.value,
   };
 
   orderStore.addOrder(order);
@@ -208,6 +224,38 @@ function placeOrder() {
   color: #777;
   font-size: 14px;
   margin-bottom: 25px;
+}
+
+/* ORDER SUMMARY */
+.order-summary {
+  background: #f8f8f8;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 18px 0 22px;
+}
+
+.order-summary h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.order-summary .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: #333;
+}
+
+.order-summary .row.total {
+  border-bottom: none;
+  padding-top: 14px;
+  font-size: 18px;
+}
+
+.order-summary .discount {
+  color: #0f766e;
 }
 
 /* FORM */

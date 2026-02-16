@@ -26,7 +26,50 @@
           </div>
 
           <div class="cart-summary">
-            <h3>Total: ${{ totalPrice }}</h3>
+            <div class="summary-left">
+              <h3>Order Summary</h3>
+
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <strong>${{ subtotal.toFixed(2) }}</strong>
+              </div>
+
+              <div v-if="coupon?.code" class="summary-row coupon-row">
+                <span class="muted">
+                  Coupon <strong>{{ coupon.code }}</strong>
+                  <button class="link-btn" type="button" @click="removeCoupon">
+                    Remove
+                  </button>
+                </span>
+                <strong class="discount">- ${{ discountAmount.toFixed(2) }}</strong>
+              </div>
+
+              <div v-else class="coupon-box">
+                <label class="coupon-label">Have a coupon?</label>
+                <div class="coupon-controls">
+                  <input
+                    v-model="couponInput"
+                    class="coupon-input"
+                    type="text"
+                    placeholder="Enter code e.g. SAVE10"
+                    @keydown.enter.prevent="apply"
+                  />
+                  <button class="apply-btn" type="button" @click="apply">
+                    Apply
+                  </button>
+                </div>
+                <p v-if="couponMsg" class="coupon-msg" :class="{ err: !couponOk }">
+                  {{ couponMsg }}
+                </p>
+                <p class="coupon-hint">Try: <code>SAVE10</code>, <code>WELCOME15</code>, <code>FLAT50</code></p>
+              </div>
+
+              <div class="summary-row total-row">
+                <span>Total</span>
+                <strong>${{ total.toFixed(2) }}</strong>
+              </div>
+            </div>
+
             <button class="checkout-btn" @click="goToCheckout">
               Proceed to Checkout
             </button>
@@ -41,21 +84,44 @@
 
 
 <script setup>
-import { computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 
 const router = useRouter();
-const { cart, increaseQty, decreaseQty } = useCart();
+const {
+  cart,
+  increaseQty,
+  decreaseQty,
+  coupon,
+  subtotal,
+  discountAmount,
+  total,
+  applyCoupon,
+  clearCoupon,
+} = useCart();
 
-const totalPrice = computed(() =>
-  cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
-);
+const couponInput = ref("");
+const couponMsg = ref("");
+const couponOk = ref(true);
 
 function goToCheckout() {
   router.push("/checkout");
+}
+
+function apply() {
+  const res = applyCoupon(couponInput.value);
+  couponMsg.value = res.message;
+  couponOk.value = res.ok;
+  if (res.ok) couponInput.value = "";
+}
+
+function removeCoupon() {
+  clearCoupon();
+  couponMsg.value = "";
+  couponOk.value = true;
 }
 </script>
 <style scoped>
@@ -156,12 +222,120 @@ function goToCheckout() {
   background: #f8f8f8;
   border-radius: 14px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 18px;
 }
 
 .cart-summary h3 {
   font-size: 22px;
+  margin: 0 0 12px;
+}
+
+.summary-left {
+  flex: 1;
+  min-width: 280px;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: #333;
+}
+
+.summary-row.total-row {
+  border-bottom: none;
+  padding-top: 14px;
+  font-size: 18px;
+}
+
+.discount {
+  color: #0f766e;
+}
+
+.muted {
+  color: #555;
+}
+
+.coupon-box {
+  padding: 12px 0 4px;
+}
+
+.coupon-label {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.coupon-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.coupon-input {
+  flex: 1;
+  margin: 0;
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+}
+
+.apply-btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #736fc2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.apply-btn:hover {
+  background: #5f5bb3;
+}
+
+.coupon-msg {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #0f766e;
+}
+
+.coupon-msg.err {
+  color: #b91c1c;
+}
+
+.coupon-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #777;
+}
+
+.coupon-hint code {
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.link-btn {
+  margin-left: 10px;
+  border: none;
+  background: transparent;
+  color: #736fc2;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
 }
 
 /* CHECKOUT BUTTON */
@@ -188,5 +362,16 @@ function goToCheckout() {
 
 .content {
   flex: 1; /* pushes footer to bottom */
+}
+
+@media (max-width: 720px) {
+  .cart-summary {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .checkout-btn {
+    width: 100%;
+  }
 }
 </style>

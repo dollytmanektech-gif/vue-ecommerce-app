@@ -10,4 +10,6 @@ export const useOrderStore = defineStore("order", {
       this.orders.unshift(order);
     },
   },
+
+  persist: true,
 });

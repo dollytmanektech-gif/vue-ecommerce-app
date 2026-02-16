@@ -3,137 +3,167 @@
     <Navbar />
     <div class="content-wrapper">
       <div class="products-layout">
-    <!-- FILTER SIDEBAR -->
-    <aside class="filters-sidebar">
-      <h3>Filters</h3>
+        <!-- FILTER SIDEBAR -->
+        <aside class="filters-sidebar">
+          <h3>Filters</h3>
 
-      <div class="filter-group">
-        <h4>Price</h4>
-        <input type="range" min="0" max="5000" v-model="priceRange" />
-        <span>Up to ${{ priceRange }}</span>
-      </div>
+          <div class="filter-group">
+            <h4>Price</h4>
+            <input type="range" min="0" max="5000" v-model="priceRange" />
+            <span>Up to ${{ priceRange }}</span>
+          </div>
 
-      <div class="filter-group">
-        <h4>Rating</h4>
-        <select v-model="minRating">
-          <option value="0">All</option>
-          <option value="3">3★ & above</option>
-          <option value="4">4★ & above</option>
-          <option value="4.5">4.5★ & above</option>
-        </select>
-      </div>
+          <div class="filter-group">
+            <h4>Rating</h4>
+            <select v-model="minRating">
+              <option value="0">All</option>
+              <option value="3">3★ & above</option>
+              <option value="4">4★ & above</option>
+              <option value="4.5">4.5★ & above</option>
+            </select>
+          </div>
 
-      <div class="filter-group">
-        <h4>Brands</h4>
-        <div class="brands-list">
-          <label v-for="brand in brands" :key="brand" class="checkbox-label">
-            <input type="checkbox" :value="brand" v-model="selectedBrands" class="checkbox-input" />
-            <span class="checkbox-text">{{ brand }}</span>
-          </label>
-        </div>
-      </div>
-      <div class="filter-group">
-        <h4>Discount</h4>
-        <input type="range" min="0" max="50" step="1" v-model="discountRange" />
-        <span class="range-display">
-          {{ discountRange ? `${discountRange}% & above` : 'All' }}
-        </span>
-      </div>
+          <div class="filter-group">
+            <h4>Brands</h4>
+            <div class="brands-list">
+              <label
+                v-for="brand in brands"
+                :key="brand"
+                class="checkbox-label"
+              >
+                <input
+                  type="checkbox"
+                  :value="brand"
+                  v-model="selectedBrands"
+                  class="checkbox-input"
+                />
+                <span class="checkbox-text">{{ brand }}</span>
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4>Discount</h4>
+            <input
+              type="range"
+              min="0"
+              max="50"
+              step="1"
+              v-model="discountRange"
+            />
+            <span class="range-display">
+              {{ discountRange ? `${discountRange}% & above` : "All" }}
+            </span>
+          </div>
 
-      <button class="clear-btn" @click="clearFilters">Clear Filters</button>
-    </aside>
+          <button class="clear-btn" @click="clearFilters">Clear Filters</button>
+        </aside>
 
-    <!-- RIGHT CONTENT -->
-    <section class="products-section">
-      <!-- Search -->
-      <div class="search-container">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search products..."
-          class="search-input"
-        />
-      </div>
+        <!-- RIGHT CONTENT -->
+        <section class="products-section">
+          <!-- Search -->
+          <div class="search-container">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search products..."
+              class="search-input"
+            />
+          </div>
 
-      <!-- Categories -->
-      <div class="category-filters">
-        <button
-          v-for="category in categories"
-          :key="category.slug"
-          @click="selectedCategory = category.slug"
-          :class="[
-            'filter-btn',
-            { active: selectedCategory === category.slug },
-          ]"
-        >
-          {{ category.name }}
-        </button>
-      </div>
+          <!-- Categories -->
+          <div class="category-filters">
+            <button
+              v-for="category in categories"
+              :key="category.slug"
+              @click="selectedCategory = category.slug"
+              :class="[
+                'filter-btn',
+                { active: selectedCategory === category.slug },
+              ]"
+            >
+              {{ category.name }}
+            </button>
+          </div>
 
-      <!-- Products Count -->
-      <div class="products-info">
-        <p class="products-count">
-          Showing {{ filteredProducts.length }} of
-          {{ products.length }} products
-        </p>
-      </div>
+          <!-- Products Count -->
+          <div class="products-info">
+            <p class="products-count">
+              Showing {{ filteredProducts.length }} of
+              {{ products.length }} products
+            </p>
+          </div>
 
-      <!-- SKELETON LOADER -->
-      <div v-if="isLoading" class="skeleton-grid">
-        <div v-for="n in 6" :key="n" class="skeleton-card">
-          <div class="skeleton-img"></div>
-          <div class="skeleton-line short"></div>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line price"></div>
-        </div>
-      </div>
-
-      <!-- Products Grid -->
-      <div v-if="filteredProducts.length > 0" class="products-grid">
-        <div
-          v-for="product in filteredProducts"
-          :key="product.id"
-          class="product-card"
-          @click="viewProduct(product)"
-        >
-          <div class="product-image-wrapper">
-            <img :src="product.image" :alt="product.name" />
-            <div class="product-overlay">
-              <button class="view-btn">View Details</button>
+          <!-- SKELETON LOADER -->
+          <div v-if="isLoading" class="skeleton-grid">
+            <div v-for="n in 6" :key="n" class="skeleton-card">
+              <div class="skeleton-img"></div>
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line price"></div>
             </div>
           </div>
 
-          <div class="product-info">
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-category">{{ product.category }}</p>
-            <div class="product-footer">
-              <span class="product-price">${{ product.price }}</span>
-              <button
-                class="add-to-cart-btn"
-                @click.stop="handleCartAction(product)"
-              >
-                {{ isInCart(product.id) ? "Go to Cart" : "Add to Cart" }}
+          <!-- Products Grid -->
+          <div v-if="filteredProducts.length > 0" class="products-grid">
+            <div
+              v-for="product in filteredProducts"
+              :key="product.id"
+              class="product-card"
+              @click="viewProduct(product)"
+            >
+              <div class="product-image-wrapper">
+                <img :src="product.image" :alt="product.name" />
+                <div class="product-overlay">
+                  <button class="view-btn">View Details</button>
+                </div>
+              </div>
+
+              <div class="product-info">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-category">{{ product.category }}</p>
+                <div class="product-footer">
+                  <span class="product-price">${{ product.price }}</span>
+                  <button
+                    class="wishlist-btn"
+                    type="button"
+                    :aria-pressed="isInWishlist(product.id)"
+                    :title="
+                      isInWishlist(product.id)
+                        ? 'Remove from wishlist'
+                        : 'Add to wishlist'
+                    "
+                    @click.stop="toggleWishlist(product)"
+                  >
+                    <span class="heart" :class="{ active: isInWishlist(product.id) }"
+                      >♥</span
+                    >
+                  </button>
+                  <button
+                    class="add-to-cart-btn"
+                    @click.stop="handleCartAction(product)"
+                  >
+                    {{ isInCart(product.id) ? "Go to Cart" : "Add to Cart" }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty -->
+          <!-- No Results Message -->
+          <div v-else class="no-results">
+            <div class="no-results-content">
+              <p class="no-results-icon">🔍</p>
+              <h3>No products found</h3>
+              <p>Try adjusting your search or filter criteria</p>
+              <button @click="clearFilters" class="clear-filters-btn">
+                Clear Filters
               </button>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-
-      <!-- Empty -->
-      <!-- No Results Message -->
-      <div v-else class="no-results">
-        <div class="no-results-content">
-          <p class="no-results-icon">🔍</p>
-          <h3>No products found</h3>
-          <p>Try adjusting your search or filter criteria</p>
-          <button @click="clearFilters" class="clear-filters-btn">
-            Clear Filters
-          </button>
-        </div>
-      </div>
-    </section>
-  </div>
-  </div>
+    </div>
   </div>
 
   <Footer />
@@ -145,6 +175,7 @@ import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
+import { useWishlistStore } from "../stores/wishlist";
 
 // Search and filter state
 const searchQuery = ref("");
@@ -259,6 +290,15 @@ function handleCartAction(product) {
   }
 }
 
+const wishlistStore = useWishlistStore();
+
+function toggleWishlist(product) {
+  wishlistStore.toggleWishlist(product);
+}
+
+function isInWishlist(productId) {
+  return wishlistStore.isInWishlist(productId);
+}
 // Add to cart
 // function addToCart(product) {
 //   console.log("Adding to cart:", product);
@@ -509,6 +549,39 @@ onMounted(() => {
 .add-to-cart-btn:hover {
   transform: scale(1.05);
   opacity: 0.9;
+}
+
+.wishlist-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  background: #fff;
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.wishlist-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-color: rgba(17, 24, 39, 0.2);
+}
+
+.heart {
+  font-size: 18px;
+  line-height: 1;
+  color: #9ca3af;
+  transform: translateY(1px);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.heart.active {
+  color: #ef4444;
+  transform: translateY(1px) scale(1.05);
 }
 
 /* No Results */

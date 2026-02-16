@@ -4,11 +4,12 @@ import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import About from '../views/About-Us.vue'
 import Product from '../views/Products.vue'
-import { isAuthenticated } from '../api/auth'
 import ProductDetails from '../views/ProductDetails.vue'
 import Cart from '../views/Cart.vue'
 import Checkout from '../views/Checkout.vue'
 import Order from '../views/Order.vue'
+import Wishlist from '../views/Wishlist.vue'
+import { useAuthStore } from "../stores/auth";
 
 const routes = [
   { path: '/', component: Dashboard, },
@@ -32,11 +33,18 @@ const routes = [
   },
   {
     path: '/checkout',
-    component: Checkout
+    component: Checkout,
+    meta: { requiresAuth: true }
   },
   {
   path: "/orders",
   component: Order,
+   meta: { requiresAuth: true }
+},
+{
+  path: "/wishlist",
+  component: Wishlist,
+  meta: { requiresAuth: true }
 }
 
 ]
@@ -50,9 +58,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+  const authStore = useAuthStore();
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({
       path: '/login',
       query: { redirect: to.fullPath }
