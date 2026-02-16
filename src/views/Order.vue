@@ -33,25 +33,24 @@
   </section>
   <Footer />
 </template>
+
 <script setup>
-import { ref, onMounted } from "vue";
+import { computed } from "vue";
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
+import { useOrderStore } from "../stores/order";
+import { useAuthStore } from "../stores/auth";
 
-const orders = ref([]);
-
-onMounted(() => {
-  const userEmail = localStorage.getItem("userEmail");
-
-  if (!userEmail) {
-    orders.value = [];
-    return;
-  }
-
-  const storageKey = `orders_${userEmail}`;
-  orders.value = JSON.parse(localStorage.getItem(storageKey)) || [];
-});
+const orderStore = useOrderStore();
+const authStore = useAuthStore();
+const orders = computed(() => orderStore.orders);
+const userOrders = computed(() =>
+  orderStore.orders.filter(
+    (order) => order.customer.email === authStore.user?.email
+  )
+);
 </script>
+
 <style scoped>
 .order-history {
   max-width: 900px;
