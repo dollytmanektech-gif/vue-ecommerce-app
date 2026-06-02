@@ -5,9 +5,13 @@
   <div class="product-card">
 
     <!-- Image Section -->
-    <div class="image-box">
-      <img :src="product.thumbnail" :alt="product.title" />
-    </div>
+   <div class="image-box">
+  <img 
+    :src="currentImage" 
+    :alt="product.title"
+    @error="$event.target.src = '/placeholder.jpg'"
+  />
+</div>
 
     <!-- Info Section -->
     <div class="info">
@@ -23,14 +27,34 @@
       <p class="description">
         {{ product.description }}
       </p>
+      <div v-if="product.variants?.length" class="variants-section">
+        <span class="variant-label">Select {{ getVariantType(product.variants) }}:</span>
+        <div class="variant-options">
+          <button
+            v-for="variant in product.variants"
+            :key="variant.variant_id"
+            class="variant-btn"
+            :class="{ active: selectedVariant === variant.variant_id }"
+            @click="selectedVariant = variant.variant_id"
+          >
+            <span
+              v-if="variant.hex"
+              class="variant-swatch"
+              :style="{ backgroundColor: variant.hex }"
+            ></span>
+            <span class="variant-name">{{ variant.name }}</span>
+          </button>
+        </div>
+      </div>
 
       <!-- Price -->
       <div class="price-box">
-        <span class="price">${{ product.price }}</span>
-        <span class="discount">
-          {{ product.discountPercentage }}% OFF
+        <span class="price">${{ getProductPrice(product) }}</span>
+        <span v-if="getDiscount(product)" class="discount">
+          {{ getDiscount(product) }}% OFF
         </span>
       </div>
+
 
       <!-- Actions -->
       <div class="actions">
@@ -51,30 +75,104 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,computed  } from 'vue'
 import { useRoute,useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import Footer from '../components/Footer.vue'
 import { useCart } from '../composables/useCart'
+import productsData from '../data/products_with_variants.json'
 
 const route = useRoute()
 const router = useRouter();
 const product = ref(null)
 const isLoading = ref(false)
 const { addToCart,isInCart  } = useCart()
+const selectedVariant = ref(null)
+const currentImage = computed(() => {
+  if (!product.value) return '/placeholder.jpg'
+  
+  // If a variant is selected and has its own image
+  if (selectedVariant.value && product.value.variants) {
+    const variant = product.value.variants.find(
+      v => v.variant_id === selectedVariant.value
+    )
+    if (variant?.image) return variant.image
+  }
+  
+  // Fallback to product thumbnail or first image
+  return product.value.thumbnail || product.value.images?.[0] || '/placeholder.jpg'
+})
 
 async function fetchProductDetails() {
   try {
     isLoading.value = true
-    const response = await fetch(
-      `https://dummyjson.com/products/${route.params.id}`
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 300))
+
+    const found = productsData.products.find(
+      p => p.id === Number(route.params.id)
     )
-    product.value = await response.json()
+
+    if (!found) {
+      throw new Error('Product not found')
+    }
+      // Map variant images from product images array
+    const variantImages = found.images || [found.thumbnail]
+    
+    product.value = {
+      ...found,
+      variants: (found.variants || []).map((v, index) => ({
+        ...v,
+        // Assign an image to each variant (cycle through available images)
+        image: variantImages[index % variantImages.length] || found.thumbnail
+      }))
+    }
+      // Auto-select first variant
+    if (product.value.variants.length > 0) {
+      selectedVariant.value = product.value.variants[0].variant_id
+    }
+
+    // Map to the same shape your template expects
+    product.value = {
+      id: found.id,
+      name: found.title,
+      description: found.description,
+      category: found.category,
+      price: found.price,
+      image: found.thumbnail,
+      images: found.images,
+      rating: found.rating,
+      brand: found.brand,
+      discount: found.discountPercentage,
+      stock: found.stock,
+      sku: found.sku,
+      variants: found.variants || [],
+    }
   } catch (error) {
-    console.error('Failed to fetch product details:', error)
+    console.error('Failed to load product details:', error)
+    // Optional: redirect to 404 or show error state
   } finally {
     isLoading.value = false
   }
+}
+
+function getVariantType(variants) {
+  if (variants[0]?.hex) return 'Color'
+  if (variants[0]?.size) return 'Size'
+  if (variants[0]?.flavor) return 'Flavor'
+  if (variants[0]?.material) return 'Material'
+  return 'Option'
+}
+function getDiscount(product) {
+  return product.discountPercentage || product.discount || 0
+}
+
+function getProductPrice(product) {
+  if (!selectedVariant.value) return product.price.toFixed(2)
+  const variant = product.variants?.find(v => v.variant_id === selectedVariant.value)
+  return variant 
+    ? (product.price + variant.price_adjustment).toFixed(2) 
+    : product.price.toFixed(2)
 }
 function handleCartAction(product) {
   if (isInCart(product.id)) {

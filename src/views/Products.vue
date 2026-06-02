@@ -111,44 +111,72 @@
               class="product-card"
               @click="viewProduct(product)"
             >
+              <!-- Image -->
               <div class="product-image-wrapper">
-                <img :src="product.image" :alt="product.name" />
+                <img :src="product.image" :alt="product.name" loading="lazy" />
                 <div class="product-overlay">
                   <button class="view-btn">View Details</button>
                 </div>
               </div>
 
+              <!-- Info -->
               <div class="product-info">
-                <h3 class="product-name">{{ product.name }}</h3>
                 <p class="product-category">{{ product.category }}</p>
+                <h3 class="product-name">{{ product.name }}</h3>
+
+                <!-- Compact Variants -->
+                <div
+                  v-if="product.variants?.length"
+                  class="product-variants"
+                  @click.stop
+                >
+                  <button
+                    v-for="variant in product.variants"
+                    :key="variant.variant_id"
+                    class="variant-dot"
+                    :class="{
+                      active:
+                        selectedVariants[product.id] === variant.variant_id,
+                    }"
+                    :title="variant.name"
+                    @click.stop="selectVariant(product.id, variant.variant_id)"
+                  >
+                    <span
+                      v-if="variant.hex"
+                      class="dot-color"
+                      :style="{ backgroundColor: variant.hex }"
+                    ></span>
+                    <span v-else class="dot-text">{{
+                      variant.name.charAt(0)
+                    }}</span>
+                  </button>
+                </div>
+
+                <!-- Footer -->
                 <div class="product-footer">
-                  <span class="product-price">${{ product.price }}</span>
-                  <button
-                    class="wishlist-btn"
-                    type="button"
-                    :aria-pressed="isInWishlist(product.id)"
-                    :title="
-                      isInWishlist(product.id)
-                        ? 'Remove from wishlist'
-                        : 'Add to wishlist'
-                    "
-                    @click.stop="toggleWishlist(product)"
+                  <span class="product-price"
+                    >${{ getProductPrice(product) }}</span
                   >
-                    <span class="heart" :class="{ active: isInWishlist(product.id) }"
-                      >♥</span
+                  <div class="product-actions">
+                    <button
+                      class="action-icon"
+                      type="button"
+                      :class="{ active: isInWishlist(product.id) }"
+                      @click.stop="toggleWishlist(product)"
                     >
-                  </button>
-                  <button
-                    class="add-to-cart-btn"
-                    @click.stop="handleCartAction(product)"
-                  >
-                    {{ isInCart(product.id) ? "Go to Cart" : "Add to Cart" }}
-                  </button>
+                      ♥
+                    </button>
+                    <button
+                      class="action-btn"
+                      @click.stop="handleCartAction(product)"
+                    >
+                      {{ isInCart(product.id) ? "In Cart" : "Add" }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
           <!-- Empty -->
           <!-- No Results Message -->
           <div v-else class="no-results">
@@ -170,12 +198,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, reactive } from "vue";
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
 import { useWishlistStore } from "../stores/wishlist";
+import productsData from "../data/products_with_variants.json"; // adjust path
 
 // Search and filter state
 const searchQuery = ref("");
@@ -201,33 +230,40 @@ const categories = [
 // Products data
 const products = ref([]);
 const isLoading = ref(false);
+
 async function fetchProducts() {
   try {
     isLoading.value = true;
 
-    const response = await fetch("https://dummyjson.com/products");
-    const data = await response.json();
+    // Simulate a small delay so loading state still feels natural
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-    products.value = data.products
+    // Direct access — no fetch, no .json() needed
+    products.value = productsData.products
       .filter((product) => product.category !== "groceries")
       .map((product) => ({
         id: product.id,
         name: product.title,
         category: product.category,
-        categorySlug: product.category,
         price: product.price,
         image: product.thumbnail,
         rating: product.rating,
         brand: product.brand,
         discount: product.discountPercentage,
+        // Include variants
+        variants: product.variants || [],
+        // Pre-calculate discounted prices for variants
+        variantPrices: (product.variants || []).map((v) => ({
+          ...v,
+          finalPrice: (product.price + v.price_adjustment).toFixed(2),
+        })),
       }));
   } catch (error) {
-    console.error("Failed to fetch products:", error);
+    console.error("Failed to load products:", error);
   } finally {
     isLoading.value = false;
   }
 }
-
 // Filtered products computed property
 const filteredProducts = computed(() => {
   return products.value.filter((product) => {
@@ -291,6 +327,7 @@ function handleCartAction(product) {
 }
 
 const wishlistStore = useWishlistStore();
+const selectedVariants = reactive({});
 
 function toggleWishlist(product) {
   wishlistStore.toggleWishlist(product);
@@ -298,6 +335,18 @@ function toggleWishlist(product) {
 
 function isInWishlist(productId) {
   return wishlistStore.isInWishlist(productId);
+}
+function selectVariant(productId, variantId) {
+  selectedVariants[productId] = variantId;
+}
+function getProductPrice(product) {
+  const selectedId = selectedVariants[product.id];
+  if (!selectedId) return product.price.toFixed(2);
+
+  const variant = product.variants.find((v) => v.variant_id === selectedId);
+  if (!variant) return product.price.toFixed(2);
+
+  return (product.price + variant.price_adjustment).toFixed(2);
 }
 // Add to cart
 // function addToCart(product) {
@@ -628,7 +677,204 @@ onMounted(() => {
 .clear-filters-btn:hover {
   transform: scale(1.05);
 }
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
 
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+/* Image */
+.product-image-wrapper {
+  position: relative;
+  aspect-ratio: 1;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.product-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-image-wrapper img {
+  transform: scale(1.03);
+}
+
+.product-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.view-btn {
+  background: #fff;
+  color: #333;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Info */
+.product-info {
+  padding: 14px;
+}
+
+.product-category {
+  font-size: 11px;
+  color: #888;
+  text-transform: capitalize;
+  margin: 0 0 4px;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.35;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+}
+
+/* Variants - Compact Dots */
+.product-variants {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.variant-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.15s ease;
+}
+
+.variant-dot:hover {
+  border-color: #999;
+}
+
+.variant-dot.active {
+  border-color: #222;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #222;
+}
+
+.dot-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: block;
+}
+
+.dot-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Footer */
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+.product-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  color: #bbb;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.action-icon:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.action-icon.active {
+  background: #ffeaea;
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.action-btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: none;
+  background: #0078d4;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.action-btn:hover {
+  background: #444;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .page-title {
