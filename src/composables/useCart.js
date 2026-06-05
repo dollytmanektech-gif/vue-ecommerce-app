@@ -130,9 +130,16 @@ function decreaseQty(item) {
     },
     { deep: true }
   )
-   const isInCart = (id) =>
-    cart.value.some(item => item.id === id)
-
+     function isInCart(id, variantId = null, size = null) {
+    if (!variantId) {
+      return cart.value.some(item => item.id === id)
+    }
+    return cart.value.some(
+      item => item.id === id &&
+              item.variant?.variantId === variantId &&
+              item.variant?.size === size
+    )
+  }
 
   return {
     cart,

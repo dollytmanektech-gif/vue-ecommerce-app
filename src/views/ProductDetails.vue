@@ -1,159 +1,205 @@
-<template>
+<<template>
   <Navbar />
 
-<div class="product-wrapper" v-if="product && !isLoading">
-  <div class="product-card">
+  <div class="product-wrapper" v-if="product && !isLoading">
+    <div class="product-layout">
 
-    <!-- Image Section -->
-   <div class="image-box">
-  <img 
-    :src="currentImage" 
-    :alt="product.title"
-    @error="$event.target.src = '/placeholder.jpg'"
-  />
-</div>
+      <!-- LEFT: Image Gallery -->
+<div class="gallery-section">
+  <!-- Thumbnails -->
+  <div class="thumbnail-strip">
+    <img
+      v-for="(img, i) in currentVariantImages"
+      :key="i"
+      :src="img"
+      :class="{ active: activeImageIndex === i }"
+      @click="activeImageIndex = i"
+    />
+  </div>
 
-    <!-- Info Section -->
-    <div class="info">
-      <span class="category-badge">{{ product.category }}</span>
-
-      <h2 class="title">{{ product.title }}</h2>
-
-      <!-- Rating -->
-      <div class="rating">
-        ⭐ {{ product.rating }} / 5
-      </div>
-
-      <p class="description">
-        {{ product.description }}
-      </p>
-      <div v-if="product.variants?.length" class="variants-section">
-        <span class="variant-label">Select {{ getVariantType(product.variants) }}:</span>
-        <div class="variant-options">
-          <button
-            v-for="variant in product.variants"
-            :key="variant.variant_id"
-            class="variant-btn"
-            :class="{ active: selectedVariant === variant.variant_id }"
-            @click="selectedVariant = variant.variant_id"
-          >
-            <span
-              v-if="variant.hex"
-              class="variant-swatch"
-              :style="{ backgroundColor: variant.hex }"
-            ></span>
-            <span class="variant-name">{{ variant.name }}</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Price -->
-      <div class="price-box">
-        <span class="price">${{ getProductPrice(product) }}</span>
-        <span v-if="getDiscount(product)" class="discount">
-          {{ getDiscount(product) }}% OFF
-        </span>
-      </div>
-
-
-      <!-- Actions -->
-      <div class="actions">
-        <button class="cart-btn"  @click.stop="handleCartAction(product)">
-    {{ isInCart(product.id) ? 'Go to Cart' : 'Add to Cart' }}</button>
-        <button class="buy-btn">Buy Now</button>
-      </div>
-
-    </div>
+  <!-- Main Image -->
+  <div class="main-image">
+    <img
+      :src="currentVariantImages[activeImageIndex]"
+      :alt="product.title"
+      @error="$event.target.src = '/placeholder.jpg'"
+    />
+    <button v-if="currentVariantImages.length > 1" class="nav-btn prev" @click="prevImage">‹</button>
+    <button v-if="currentVariantImages.length > 1" class="nav-btn next" @click="nextImage">›</button>
   </div>
 </div>
-<div v-if="isLoading" class="spinner-wrapper">
-  <div class="spinner"></div>
-  <p>Loading products...</p>
-</div>
+
+      <!-- RIGHT: Product Info -->
+      <div class="info-section">
+        <p class="product-category">{{ product.category }}</p>
+        <h1 class="product-title">{{ currentVariant.name }}</h1>
+        <p class="product-subtitle">{{ product.brand }}</p>
+
+        <!-- Price -->
+        <div class="price-row">
+          <span class="price">${{ getProductPrice(product) }}</span>
+          <span class="tax-note">Inclusive of all taxes</span>
+        </div>
+
+         <!-- Size Selection for Selected Variant -->
+        <div v-if="currentVariant?.size?.length" class="size-section">
+          <div class="size-header">
+            <span class="size-label">Select Size</span>
+          </div>
+          <div class="size-grid">
+            <button
+              v-for="size in currentVariant.size"
+              :key="size"
+              class="size-btn"
+              :class="{ active: selectedSize === size }"
+              @click="selectedSize = size"
+            >
+              UK {{ size }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Variant Images (Color/Style selection) -->
+        <div v-if="product.variants?.length" class="variant-images">
+          <div
+            v-for="variant in product.variants"
+            :key="variant.variant_id"
+            class="variant-thumb"
+            :class="{ active: selectedVariant === variant.variant_id }"
+            @click="selectVariant(variant.variant_id)"
+          >
+            <img :src="variant.image || product.thumbnail" :alt="selectedVariant.name" />
+          </div>
+        </div>
+
+        <!-- Size/Option Selection -->
+        <div v-if="product.variants?.length" class="size-section">
+          <div class="size-header">
+            <span class="size-label">Select {{ getVariantType(product.variants) }}</span>
+          </div>
+          <div class="size-grid">
+            <button
+              v-for="variant in product.variants"
+              :key="variant.variant_id"
+              class="size-btn"
+              :class="{
+                active: selectedVariant === variant.variant_id,
+                disabled: variant.stock === 0
+              }"
+              :disabled="variant.stock === 0"
+              @click="selectVariant(variant.variant_id)"
+            >
+              <span v-if="variant.hex" class="size-color" :style="{ backgroundColor: variant.hex }"></span>
+              <span v-else>{{ variant.name }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-buttons">
+          <button class="btn-primary" @click="handleCartAction(product)">
+            {{ isInCart(product.id) ? 'Go to Cart' : 'Add to Bag' }}
+          </button>
+          <button
+            class="btn-secondary"
+            :class="{ active: isInWishlist(product.id) }"
+            @click="toggleWishlist(product)"
+          >
+            Favourite
+            <span class="heart" :class="{ active: isInWishlist(product.id) }">♡</span>
+          </button>
+        </div>
+
+        <!-- Description -->
+        <div class="product-description">
+          <p>{{ product.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="isLoading" class="spinner-wrapper">
+    <div class="spinner"></div>
+    <p>Loading product...</p>
+  </div>
+
   <Footer />
 </template>
 
 
 <script setup>
-import { ref, onMounted,computed  } from 'vue'
-import { useRoute,useRouter } from 'vue-router'
+import { ref, onMounted, computed,watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import Footer from '../components/Footer.vue'
 import { useCart } from '../composables/useCart'
 import productsData from '../data/products_with_variants.json'
+import { useWishlistStore } from "../stores/wishlist";
 
 const route = useRoute()
-const router = useRouter();
+const router = useRouter()
 const product = ref(null)
 const isLoading = ref(false)
-const { addToCart,isInCart  } = useCart()
+const wishlistStore = useWishlistStore()
+const { addToCart, isInCart } = useCart()
 const selectedVariant = ref(null)
-const currentImage = computed(() => {
-  if (!product.value) return '/placeholder.jpg'
-  
-  // If a variant is selected and has its own image
-  if (selectedVariant.value && product.value.variants) {
-    const variant = product.value.variants.find(
-      v => v.variant_id === selectedVariant.value
-    )
-    if (variant?.image) return variant.image
-  }
-  
-  // Fallback to product thumbnail or first image
-  return product.value.thumbnail || product.value.images?.[0] || '/placeholder.jpg'
+const activeImageIndex = ref(0)
+const selectedSize = ref(null)
+
+// Gallery images: all product images + variant images
+const galleryImages = computed(() => {
+  if (!product.value) return ['/placeholder.jpg']
+  const images = new Set()
+  product.value.images?.forEach(img => images.add(img))
+  product.value.thumbnail && images.add(product.value.thumbnail)
+  product.value.variants?.forEach(v => v.image && images.add(v.image))
+  return Array.from(images)
 })
-
-async function fetchProductDetails() {
-  try {
-    isLoading.value = true
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    const found = productsData.products.find(
-      p => p.id === Number(route.params.id)
-    )
-
-    if (!found) {
-      throw new Error('Product not found')
-    }
-      // Map variant images from product images array
-    const variantImages = found.images || [found.thumbnail]
-    
-    product.value = {
-      ...found,
-      variants: (found.variants || []).map((v, index) => ({
-        ...v,
-        // Assign an image to each variant (cycle through available images)
-        image: variantImages[index % variantImages.length] || found.thumbnail
-      }))
-    }
-      // Auto-select first variant
-    if (product.value.variants.length > 0) {
-      selectedVariant.value = product.value.variants[0].variant_id
-    }
-
-    // Map to the same shape your template expects
-    product.value = {
-      id: found.id,
-      name: found.title,
-      description: found.description,
-      category: found.category,
-      price: found.price,
-      image: found.thumbnail,
-      images: found.images,
-      rating: found.rating,
-      brand: found.brand,
-      discount: found.discountPercentage,
-      stock: found.stock,
-      sku: found.sku,
-      variants: found.variants || [],
-    }
-  } catch (error) {
-    console.error('Failed to load product details:', error)
-    // Optional: redirect to 404 or show error state
-  } finally {
-    isLoading.value = false
+const currentVariantImages = computed(() => {
+  if (!product.value) return ['/placeholder.jpg']
+  
+  const variant = product.value.variants?.find(v => v.variant_id === selectedVariant.value)
+  
+  // variant.image is now guaranteed to be an array
+  if (variant?.image?.length) {
+    return variant.image
   }
+  
+  return product.value.images || [product.value.thumbnail || '/placeholder.jpg']
+})
+// Computed: currently selected variant object
+const currentVariant = computed(() => {
+  return product.value?.variants?.find(v => v.variant_id === selectedVariant.value) || null
+})
+watch(currentVariantImages, (newImages) => {
+  if (newImages.length > 0) {
+    activeImageIndex.value = 0
+    selectedSize.value = currentVariant.value?.size?.[0] || null
+  }
+})
+function selectVariant(variantId) {
+  selectedVariant.value = variantId
+  // Update main image to variant image
+  const variant = product.value.variants?.find(v => v.variant_id === variantId)
+  if (variant?.image) {
+    const idx = galleryImages.value.indexOf(variant.image)
+    if (idx !== -1) activeImageIndex.value = idx
+  }
+}
+
+function prevImage() {
+  activeImageIndex.value = (activeImageIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length
+}
+
+function nextImage() {
+  activeImageIndex.value = (activeImageIndex.value + 1) % galleryImages.value.length
+}
+function toggleWishlist(product) {
+  wishlistStore.toggleWishlist(product);
+}
+
+function isInWishlist(productId) {
+  return wishlistStore.isInWishlist(productId);
 }
 
 function getVariantType(variants) {
@@ -163,6 +209,7 @@ function getVariantType(variants) {
   if (variants[0]?.material) return 'Material'
   return 'Option'
 }
+
 function getDiscount(product) {
   return product.discountPercentage || product.discount || 0
 }
@@ -170,161 +217,371 @@ function getDiscount(product) {
 function getProductPrice(product) {
   if (!selectedVariant.value) return product.price.toFixed(2)
   const variant = product.variants?.find(v => v.variant_id === selectedVariant.value)
-  return variant 
-    ? (product.price + variant.price_adjustment).toFixed(2) 
-    : product.price.toFixed(2)
+  return variant ? (product.price + variant.price_adjustment).toFixed(2) : product.price.toFixed(2)
 }
+
 function handleCartAction(product) {
-  if (isInCart(product.id)) {
+  const variant = currentVariant.value
+  
+  if (isInCart(product.id, selectedVariant.value, selectedSize.value)) {
     router.push('/cart')
   } else {
-    addToCart(product)
+    addToCart(product, {
+      variantId: selectedVariant.value,
+      size: selectedSize.value,
+      variantName: variant?.name,
+      variantColor: variant?.color,
+      variantHex: variant?.hex,
+      priceAdjustment: variant?.price_adjustment || 0
+    })
   }
 }
+async function fetchProductDetails() {
+  try {
+    isLoading.value = true
+    await new Promise(resolve => setTimeout(resolve, 300))
+
+    const found = productsData.products.find(p => p.id === Number(route.params.id))
+    if (!found) throw new Error('Product not found')
+
+    // Only ONE assignment — preserve variant image arrays
+    product.value = {
+      ...found,
+      title: found.title,        // keep for template
+      thumbnail: found.thumbnail, // keep for template
+      images: found.images,       // keep for template
+      variants: (found.variants || []).map(v => ({
+        ...v,
+        // Ensure image is always an array
+        image: Array.isArray(v.image) ? v.image : (v.image ? [v.image] : [])
+      }))
+    }
+
+    if (product.value.variants.length > 0) {
+      selectedVariant.value = product.value.variants[0].variant_id
+      selectedSize.value = product.value.variants[0].size?.[0] || null
+    }
+  } catch (error) {
+    console.error('Failed to load product details:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
 onMounted(() => {
   fetchProductDetails()
 })
 </script>
-
 <style scoped>
 .product-wrapper {
-  display: flex;
-  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 40px 20px;
 }
 
-.product-card {
+.product-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* ===== GALLERY SECTION ===== */
+.gallery-section {
   display: flex;
-  gap: 40px;
-  max-width: 1000px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  gap: 16px;
+  position: sticky;
+  top: 20px;
 }
 
-.image-box {
-  width: 400px;
-  overflow: hidden;
-  border-radius: 16px;
+.thumbnail-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 70px;
+  flex-shrink: 0;
 }
 
-.image-box img {
-  width: 100%;
-  transition: transform 0.4s ease;
+.thumbnail-strip img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
 }
 
-.image-box:hover img {
-  transform: scale(1.08);
+.thumbnail-strip img.active,
+.thumbnail-strip img:hover {
+  border-color: #111;
 }
 
-/* Info */
-.info {
+.main-image {
   flex: 1;
+  position: relative;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
 }
 
-.category-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #7367f0, #a66cff);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
+.main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #111;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.main-image:hover .nav-btn {
+  opacity: 1;
+}
+
+.nav-btn.prev { left: 12px; }
+.nav-btn.next { right: 12px; }
+
+/* ===== INFO SECTION ===== */
+.info-section {
+  padding-top: 8px;
+}
+
+.product-category {
+  font-size: 14px;
+  color: #666;
   text-transform: capitalize;
+  margin-bottom: 4px;
 }
 
-.title {
-  margin: 15px 0;
+.product-title {
   font-size: 28px;
   font-weight: 600;
+  color: #111;
+  line-height: 1.2;
+  margin: 0 0 4px;
 }
 
-.rating {
-  font-size: 14px;
-  margin-bottom: 15px;
-  color: #f39c12;
-}
-
-.description {
-  color: #555;
-  line-height: 1.6;
+.product-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
 }
 
 /* Price */
-.price-box {
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.price-row {
+  margin-bottom: 24px;
 }
 
 .price {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  display: block;
+}
+
+.tax-note {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Variant Images */
+.variant-images {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.variant-thumb {
+  width: 70px;
+  height: 70px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.2s;
+}
+
+.variant-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.variant-thumb.active,
+.variant-thumb:hover {
+  border-color: #111;
+}
+
+/* Size Section */
+.size-section {
+  margin-bottom: 24px;
+}
+
+.size-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.size-label {
+  font-size: 16px;
+  font-weight: 600;
   color: #111;
 }
 
-.discount {
-  background: #eafaf1;
-  color: #27ae60;
-  padding: 6px 10px;
-  border-radius: 8px;
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.size-btn {
+  height: 48px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fff;
   font-size: 14px;
-}
-
-/* Buttons */
-.actions {
+  color: #111;
+  cursor: pointer;
   display: flex;
-  gap: 15px;
-  margin-top: 30px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
 }
 
-.cart-btn {
-  background: #7367f0;
-  color: #fff;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 15px;
+.size-btn:hover:not(.disabled) {
+  border-color: #111;
 }
 
-.buy-btn {
-  background: #111;
-  color: #fff;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 10px;
-  cursor: pointer;
+.size-btn.active {
+  border-color: #111;
+  box-shadow: 0 0 0 1px #111;
 }
 
-.cart-btn:hover {
-  background: #5e50ee;
+.size-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  color: #999;
 }
 
-.buy-btn:hover {
-  background: #000;
+.size-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.2);
 }
-.spinner-wrapper {
+
+/* Action Buttons */
+.action-buttons {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 30px;
+  background: #111;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #333;
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 56px;
+  border: 1px solid #e0e0e0;
+  border-radius: 30px;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
   align-items: center;
-  margin: 60px 0;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: #111;
+}
+
+.btn-secondary.active {
+  border-color: #111;
+}
+
+.btn-secondary .heart {
+  font-size: 18px;
+  color: #111;
+}
+
+.btn-secondary .heart.active {
+  color: #e74c3c;
+}
+
+/* Description */
+.product-description {
+  font-size: 14px;
+  line-height: 1.6;
   color: #555;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 24px;
 }
 
-.spinner {
-  width: 46px;
-  height: 46px;
-  border: 5px solid #eee;
-  border-top: 5px solid #7367f0;
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
+/* Responsive */
+@media (max-width: 768px) {
+  .product-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  .gallery-section {
+    position: static;
+    flex-direction: column-reverse;
+  }
+
+  .thumbnail-strip {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .size-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
