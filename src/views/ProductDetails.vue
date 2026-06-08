@@ -98,7 +98,7 @@
         <!-- Actions -->
         <div class="action-buttons">
           <button class="btn-primary" @click="handleCartAction(product)">
-            {{ isInCart(product.id) ? 'Go to Cart' : 'Add to Bag' }}
+            {{ isCurrentVariantInCart ? 'Go to Cart' : 'Add to Bag' }}
           </button>
           <button
             class="btn-secondary"
@@ -171,6 +171,10 @@ const currentVariantImages = computed(() => {
 const currentVariant = computed(() => {
   return product.value?.variants?.find(v => v.variant_id === selectedVariant.value) || null
 })
+const isCurrentVariantInCart = computed(() => {
+  if (!product.value || !selectedVariant.value) return false
+  return isInCart(product.value.id, selectedVariant.value, selectedSize.value)
+})
 watch(currentVariantImages, (newImages) => {
   if (newImages.length > 0) {
     activeImageIndex.value = 0
@@ -186,6 +190,7 @@ function selectVariant(variantId) {
     if (idx !== -1) activeImageIndex.value = idx
   }
 }
+
 
 function prevImage() {
   activeImageIndex.value = (activeImageIndex.value - 1 + galleryImages.value.length) % galleryImages.value.length
@@ -222,16 +227,19 @@ function getProductPrice(product) {
 
 function handleCartAction(product) {
   const variant = currentVariant.value
+  console.log('Selected Variant:', variant)
   
   if (isInCart(product.id, selectedVariant.value, selectedSize.value)) {
     router.push('/cart')
   } else {
+    
     addToCart(product, {
       variantId: selectedVariant.value,
       size: selectedSize.value,
       variantName: variant?.name,
       variantColor: variant?.color,
       variantHex: variant?.hex,
+      variantImage:  variant?.image?.[0],
       priceAdjustment: variant?.price_adjustment || 0
     })
   }

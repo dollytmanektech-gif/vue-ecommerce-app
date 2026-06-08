@@ -11,11 +11,28 @@
         </div>
 
         <div v-else>
-          <div class="cart-item" v-for="item in cart" :key="item.id">
-            <img :src="item.image" />
+          <!-- Cart Items -->
+          <div class="cart-item" v-for="item in cart" :key="item.id + '-' + (item.variant?.variantId || 'default')">
+            <img :src="item.variant?.image" :alt="item.name" />
+            
             <div class="info">
-              <h4>{{ item.name }}</h4>
-              <p>${{ item.price }} × {{ item.quantity }}</p>
+              <h4>{{ item.variant.name }}</h4>
+              
+              <!-- Variant Details -->
+              <div v-if="item.variant" class="variant-info">
+                <span v-if="item.variant.hex" class="variant-color" :style="{ backgroundColor: item.variant.hex }"></span>
+                <span class="variant-name">{{ item.name }}</span>
+                <span v-if="item.variant.size" class="variant-size">Size: UK {{ item.variant.size }}</span>
+              </div>
+              
+              <!-- Price -->
+              <p class="price-line">
+                <!-- <span class="current-price">${{ item.price.toFixed(2) }}</span> -->
+                <span class="current-price">
+                  ${{ item.price.toFixed(2) }}
+                </span>
+                <span class="qty-text">× {{ item.quantity }}</span>
+              </p>
             </div>
 
             <div class="qty">
@@ -25,12 +42,13 @@
             </div>
           </div>
 
+          <!-- Order Summary -->
           <div class="cart-summary">
             <div class="summary-left">
               <h3>Order Summary</h3>
 
               <div class="summary-row">
-                <span>Subtotal</span>
+                <span>Subtotal ({{ totalItems }} items)</span>
                 <strong>${{ subtotal.toFixed(2) }}</strong>
               </div>
 
@@ -84,28 +102,20 @@
 
 
 <script setup>
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 
 const router = useRouter();
-const {
-  cart,
-  increaseQty,
-  decreaseQty,
-  coupon,
-  subtotal,
-  discountAmount,
-  total,
-  applyCoupon,
-  clearCoupon,
-} = useCart();
+
+const { cart, increaseQty, decreaseQty, coupon, subtotal, discountAmount, total, applyCoupon, clearCoupon } = useCart()
 
 const couponInput = ref("");
 const couponMsg = ref("");
 const couponOk = ref(true);
+const totalItems = computed(() => cart.value.reduce((sum, item) => sum + item.quantity, 0))
 
 function goToCheckout() {
   router.push("/checkout");
@@ -362,6 +372,58 @@ function removeCoupon() {
 
 .content {
   flex: 1; /* pushes footer to bottom */
+}
+.variant-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  flex-wrap: wrap;
+}
+
+.variant-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.15);
+  flex-shrink: 0;
+}
+
+.variant-name {
+  font-size: 13px;
+  color: #555;
+}
+
+.variant-size {
+  font-size: 12px;
+  color: #888;
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.price-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 0;
+}
+
+.current-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+
+.original-price {
+  font-size: 13px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.qty-text {
+  font-size: 13px;
+  color: #888;
 }
 
 @media (max-width: 720px) {

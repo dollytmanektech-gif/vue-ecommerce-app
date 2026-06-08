@@ -105,91 +105,147 @@
 
           <!-- Products Grid -->
           <div v-if="filteredProducts.length > 0" class="products-grid">
-            <div
-              v-for="product in filteredProducts"
-              :key="product.id"
-              class="product-card"
-              @click="viewProduct(product)"
+           <div
+            v-for="product in filteredProducts"
+            :key="product.id"
+            class="product-card"
+            @click="viewProduct(product)"
             >
-              <!-- Image -->
+               <!-- Image Section with Vertical Variant Strip -->
               <div class="product-image-wrapper">
+                <!-- Vertical Variant Dots on Left -->
+                <div v-if="product.variants?.length" class="variant-strip" @click.stop>
+                  <span
+                    v-for="variant in product.variants.slice(0, 4)"
+                    :key="variant.variant_id"
+                    class="variant-dot-v"
+                    :class="{ active: selectedVariants[product.id] === variant.variant_id }"
+                    :style="variant.hex ? { backgroundColor: variant.hex } : {}"
+                    :title="variant.name"
+                    @click.stop="selectVariant(product.id, variant.variant_id)"
+                  >
+                    <img v-if="!variant.hex && variant.image?.length" :src="variant.image[0]" />
+                  </span>
+                  <span v-if="product.variants.length > 4" class="variant-more-v">
+                    +{{ product.variants.length - 4 }}
+                  </span>
+                </div>
+
                 <img :src="product.image" :alt="product.name" loading="lazy" />
+                
                 <div class="product-overlay">
                   <button class="view-btn">View Details</button>
                 </div>
               </div>
 
-              <!-- Info -->
-              <div class="product-info">
-                <p class="product-category">{{ product.category }}</p>
-                <h3 class="product-name">{{ product.name }}</h3>
+              <!-- Info Section -->
+                <div class="product-info">
+                  <p class="product-category">{{ product.category }}</p>
+                  <h3 class="product-name">{{ product.name }}</h3>
 
-                <!-- Compact Variants -->
-                <div
-                  v-if="product.variants?.length"
-                  class="product-variants"
-                  @click.stop
-                >
-                  <button
-                    v-for="variant in product.variants"
-                    :key="variant.variant_id"
-                    class="variant-dot"
-                    :class="{
-                      active:
-                        selectedVariants[product.id] === variant.variant_id,
-                    }"
-                    :title="variant.name"
-                    @click.stop="selectVariant(product.id, variant.variant_id)"
-                  >
-                    <span
-                      v-if="variant.hex"
-                      class="dot-color"
-                      :style="{ backgroundColor: variant.hex }"
-                    ></span>
-                    <span v-else class="dot-text">{{
-                      variant.name.charAt(0)
-                    }}</span>
-                  </button>
-                </div>
-
-                <!-- Footer -->
-                <div class="product-footer">
-                  <span class="product-price"
-                    >${{ getProductPrice(product) }}</span
-                  >
-                  <div class="product-actions">
-                    <button
-                      class="action-icon"
-                      type="button"
-                      :class="{ active: isInWishlist(product.id) }"
-                      @click.stop="toggleWishlist(product)"
-                    >
-                      ♥
-                    </button>
-                    <button
-                      class="action-btn"
-                      @click.stop="handleCartAction(product)"
-                    >
-                      {{ isInCart(product.id) ? "In Cart" : "Add" }}
-                    </button>
+                  <div class="product-footer">
+                    <span class="product-price">${{ getProductPrice(product) }}</span>
+                    <div class="product-actions">
+                      <button
+                        class="action-icon"
+                        :class="{ active: isInWishlist(product.id) }"
+                        @click.stop="toggleWishlist(product)"
+                      >
+                        ♥
+                      </button>
+                      <button
+                        class="action-btn"
+                        @click.stop="openVariantModal(product)"
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </div>
+                  <!-- Empty -->
+                  <!-- No Results Message -->
               </div>
-            </div>
           </div>
-          <!-- Empty -->
-          <!-- No Results Message -->
-          <div v-else class="no-results">
-            <div class="no-results-content">
-              <p class="no-results-icon">🔍</p>
-              <h3>No products found</h3>
-              <p>Try adjusting your search or filter criteria</p>
-              <button @click="clearFilters" class="clear-filters-btn">
-                Clear Filters
+          
+        </section>
+      </div>
+    </div>
+  </div>
+  <div v-if="showModal" class="modal-overlay" @click="closeModal">
+    <div class="modal-content" @click.stop>
+      <button class="modal-close" @click="closeModal">×</button>
+
+      <div class="modal-layout">
+        <!-- Left: Image -->
+        <div class="modal-image">
+          <img :src="modalCurrentImage" :alt="selectedProduct?.name" />
+          <div v-if="modalVariantImages.length > 1" class="modal-thumbnails">
+            <img
+              v-for="(img, i) in modalVariantImages"
+              :key="i"
+              :src="img"
+              :class="{ active: modalImageIndex === i }"
+              @click="modalImageIndex = i"
+            />
+          </div>
+        </div>
+
+        <!-- Right: Details -->
+        <div class="modal-details">
+          <p class="modal-category">{{ selectedProduct?.category }}</p>
+          <h2 class="modal-title">{{ selectedProduct?.name }}</h2>
+          <p class="modal-brand">{{ selectedProduct?.brand }}</p>
+
+          <div class="modal-price">
+            <span class="price">${{ getModalPrice() }}</span>
+          </div>
+
+          <!-- Color/Variant Selection -->
+          <div v-if="selectedProduct?.variants?.length" class="modal-section">
+            <label>Select Color</label>
+            <div class="variant-grid">
+              <button
+                v-for="variant in selectedProduct.variants"
+                :key="variant.variant_id"
+                class="variant-option"
+                :class="{ active: modalSelectedVariant === variant.variant_id }"
+                @click="selectModalVariant(variant.variant_id)"
+              >
+                <img v-if="variant.image?.length" :src="variant.image[0]" />
+                <span v-if="variant.hex" class="color-dot" :style="{ backgroundColor: variant.hex }"></span>
+                <span class="variant-label">{{ variant.name }}</span>
               </button>
             </div>
           </div>
-        </section>
+
+          <!-- Size Selection -->
+          <div v-if="currentModalVariant?.size?.length" class="modal-section">
+            <label>Select Size</label>
+            <div class="size-grid">
+              <button
+                v-for="size in currentModalVariant.size"
+                :key="size"
+                class="size-option"
+                :class="{ active: modalSelectedSize === size }"
+                @click="modalSelectedSize = size"
+              >
+                UK {{ size }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="modal-actions">
+            <button
+              class="btn-primary"
+              :disabled="!canAddToCart"
+              @click="addToCartFromModal"
+            >
+              {{ isModalInCart ? 'Go to Cart' : 'Add to Bag' }}
+            </button>
+            <button class="btn-secondary" @click="closeModal">Cancel</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -230,6 +286,101 @@ const categories = [
 // Products data
 const products = ref([]);
 const isLoading = ref(false);
+const showModal = ref(false);
+const selectedProduct = ref(null);
+const modalSelectedVariant = ref(null);
+const modalSelectedSize = ref(null);
+const modalImageIndex = ref(0);
+
+const currentModalVariant = computed(() => {
+  return (
+    selectedProduct.value?.variants?.find(
+      (v) => v.variant_id === modalSelectedVariant.value
+    ) || null
+  );
+});
+
+const modalVariantImages = computed(() => {
+  if (!currentModalVariant.value?.image?.length) {
+    return [selectedProduct.value?.thumbnail || selectedProduct.value?.image];
+  }
+  return currentModalVariant.value.image;
+});
+
+const modalCurrentImage = computed(() => {
+  return (
+    modalVariantImages.value[modalImageIndex.value] ||
+    modalVariantImages.value[0]
+  );
+});
+
+const canAddToCart = computed(() => {
+  if (!modalSelectedVariant.value) return false;
+  if (currentModalVariant.value?.size?.length && !modalSelectedSize.value)
+    return false;
+  return true;
+});
+
+const isModalInCart = computed(() => {
+  if (!selectedProduct.value || !modalSelectedVariant.value) return false;
+  return isInCart(
+    selectedProduct.value.id,
+    modalSelectedVariant.value,
+    modalSelectedSize.value
+  );
+});
+
+function getModalPrice() {
+  if (!selectedProduct.value) return "0.00";
+  const variant = currentModalVariant.value;
+  const price = variant
+    ? selectedProduct.value.price + variant.price_adjustment
+    : selectedProduct.value.price;
+  return price.toFixed(2);
+}
+function openVariantModal(product) {
+  selectedProduct.value = product;
+  modalSelectedVariant.value = product.variants?.[0]?.variant_id || null;
+  modalSelectedSize.value = product.variants?.[0]?.size?.[0] || null;
+  modalImageIndex.value = 0;
+  showModal.value = true;
+}
+
+function closeModal() {
+  showModal.value = false;
+  selectedProduct.value = null;
+  modalSelectedVariant.value = null;
+  modalSelectedSize.value = null;
+  modalImageIndex.value = 0;
+}
+
+function selectModalVariant(variantId) {
+  modalSelectedVariant.value = variantId;
+  modalSelectedSize.value = currentModalVariant.value?.size?.[0] || null;
+  modalImageIndex.value = 0;
+}
+
+function addToCartFromModal() {
+  if (!canAddToCart.value) return;
+
+  if (isModalInCart.value) {
+    router.push("/cart");
+    return;
+  }
+
+  const variant = currentModalVariant.value;
+  addToCart(selectedProduct.value, {
+    variantId: modalSelectedVariant.value,
+    size: modalSelectedSize.value,
+    variantName: variant?.name,
+    variantColor: variant?.color,
+    variantHex: variant?.hex,
+    variantImage: variant?.image?.[0],
+    priceAdjustment: variant?.price_adjustment || 0,
+  });
+
+  closeModal();
+}
 
 async function fetchProducts() {
   try {
@@ -504,17 +655,17 @@ onMounted(() => {
 
 .product-image-wrapper {
   position: relative;
-  width: 100%;
-  height: 280px;
+  aspect-ratio: 1;
+  background: #f8f8f8;
   overflow: hidden;
-  background: #f7fafc;
+  display: flex;
 }
 
-.product-image-wrapper img {
+.product-image-wrapper > img {
+  flex: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
 .product-card:hover .product-image-wrapper img {
@@ -687,13 +838,13 @@ onMounted(() => {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   cursor: pointer;
 }
 
 .product-card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -719,7 +870,7 @@ onMounted(() => {
 .product-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -774,27 +925,57 @@ onMounted(() => {
   margin-bottom: 12px;
 }
 
-.variant-dot {
-  width: 24px;
-  height: 24px;
+/* Vertical Variant Strip - Left Side */
+.variant-strip {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 4px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.variant-dot-v {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 2px solid #e0e0e0;
-  background: #fff;
-  cursor: pointer;
+  border: 1.5px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  transition: border-color 0.15s ease;
+  cursor: pointer;
+  overflow: hidden;
+  background: #f5f5f5;
+  flex-shrink: 0;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
-.variant-dot:hover {
-  border-color: #999;
+.variant-dot-v:hover {
+  transform: scale(1.15);
 }
 
-.variant-dot.active {
-  border-color: #222;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #222;
+.variant-dot-v.active {
+  border-color: #111;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px #111;
+}
+
+.variant-dot-v img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.variant-more-v {
+  font-size: 9px;
+  color: #666;
+  text-align: center;
+  font-weight: 600;
 }
 
 .dot-color {
@@ -875,36 +1056,256 @@ onMounted(() => {
 .action-btn:hover {
   background: #444;
 }
-/* Responsive Design */
-@media (max-width: 768px) {
-  .page-title {
-    font-size: 2rem;
-  }
-
-  .filter-section {
-    padding: 20px;
-  }
-
-  .category-filters {
-    justify-content: center;
-  }
-
-  .product-footer {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .add-to-cart-btn {
-    width: 100%;
-  }
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
 }
 
-@media (max-width: 480px) {
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 900px;
+  max-height: fit-content;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f5f5f5;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+}
+
+/* Modal Image */
+.modal-image {
+  background: #f8f8f8;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-image img {
+  width: 100%;
+  height: 400px;
+  object-fit: contain;
+}
+
+.modal-thumbnails {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.modal-thumbnails img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.modal-thumbnails img.active {
+  border-color: #111;
+}
+
+/* Modal Details */
+.modal-details {
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.modal-category {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.modal-brand {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.modal-price {
+  margin-bottom: 24px;
+}
+
+.modal-price .price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* Sections */
+.modal-section {
+  margin-bottom: 24px;
+}
+
+.modal-section label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+/* Variant Grid */
+.variant-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variant-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.variant-option:hover {
+  border-color: #111;
+}
+
+.variant-option.active {
+  border-color: #111;
+  box-shadow: 0 0 0 1px #111;
+}
+
+.variant-option img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.variant-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Size Grid */
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.size-option {
+  height: 44px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.size-option:hover {
+  border-color: #111;
+}
+
+.size-option.active {
+  border-color: #111;
+  box-shadow: inset 0 0 0 1px #111;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #333;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: #111;
+}
+
 .skeleton-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -1203,40 +1604,5 @@ onMounted(() => {
 
 .filters-sidebar::-webkit-scrollbar-thumb:hover {
   background: #a0aec0;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .products-layout {
-    grid-template-columns: 260px 1fr;
-    gap: 24px;
-  }
-
-  .filters-sidebar {
-    padding: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .content-wrapper {
-    padding: 20px 0 40px;
-  }
-
-  .products-layout {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 0 16px;
-  }
-
-  .filters-sidebar {
-    position: relative;
-    top: 0;
-    max-height: none;
-    margin-bottom: 20px;
-  }
-
-  .filters-sidebar h3 {
-    font-size: 1.3rem;
-  }
 }
 </style>

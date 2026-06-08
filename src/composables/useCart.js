@@ -13,6 +13,12 @@ function save() {
 function saveCoupon() {
   localStorage.setItem('coupon', JSON.stringify(coupon.value))
 }
+// Generate unique key for variant-aware matching
+function getItemKey(item) {
+  const vid = item.variant?.variantId || 'default'
+  const size = item.variant?.size || 'default'
+  return `${item.id}-${vid}-${size}`
+}
 
 const COUPONS = {
   // 10% off, no minimum
@@ -24,48 +30,89 @@ const COUPONS = {
 }
 
 export function useCart() {
-  function addToCart(product) {
-    const existingItem = cart.value.find(
-      item => item.id === product.id
-    )
+  function addToCart(product, options = {}) {
+    const { 
+      variantId = null, 
+      size = null, 
+      variantName = null,
+      variantColor = null,
+      variantHex = null,
+      variantImage = null,
+      priceAdjustment = 0
+    } = options
 
-    if (existingItem) {
-      existingItem.quantity += 1
+    const finalPrice = (product.price || 0) + (priceAdjustment || 0)
+
+    const newItem = {
+      id: product.id,
+      name: product.brand,
+      price: finalPrice,
+      originalPrice: product.price,
+      image: product.image || product.thumbnail,
+      quantity: 1,
+      variant: variantId ? {
+        variantId,
+        name: variantName,
+        color: variantColor,
+        hex: variantHex,
+        image: variantImage,
+        size
+      } : null
+    }
+
+    const newKey = getItemKey(newItem)
+    const existingIndex = cart.value.findIndex(item => getItemKey(item) === newKey)
+
+    if (existingIndex >= 0) {
+      cart.value[existingIndex].quantity += 1
     } else {
-      cart.value.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image || product.thumbnail,
-        quantity: 1
-      })
-    } 
+      cart.value.push(newItem)
+    }
+    
     save()
   }
-
-  function removeFromCart(productId) {
-    cart.value = cart.value.filter(item => item.id !== productId)
-    save()
+   function removeFromCart(productId, variantId = null, size = null) {
+    const key = `${productId}-${variantId || 'default'}-${size || 'default'}`
+    const index = cart.value.findIndex(item => getItemKey(item) === key)
+    
+    if (index >= 0) {
+      cart.value.splice(index, 1)
+      save()
+    }
   }
 
   function clearCart() {
     cart.value = []
-    clearCoupon()
     save()
   }
-  function increaseQty(item) {
-  item.quantity++
-  save()
-}
 
-function decreaseQty(item) {
-  if (item.quantity > 1) {
-    item.quantity--
-  } else {
-    cart.value = cart.value.filter(p => p.id !== item.id)
+  function increaseQty(item) {
+    const key = getItemKey(item)
+    const found = cart.value.find(i => getItemKey(i) === key)
+    if (found) {
+      found.quantity++
+      save()
+    }
   }
-  save()
-}
+
+  function decreaseQty(item) {
+    const key = getItemKey(item)
+    const index = cart.value.findIndex(i => getItemKey(i) === key)
+    
+    if (index >= 0) {
+      if (cart.value[index].quantity > 1) {
+        cart.value[index].quantity--
+      } else {
+        cart.value.splice(index, 1)
+      }
+      save()
+    }
+  }
+
+  function isInCart(id, variantId = null, size = null) {
+    const key = `${id}-${variantId || 'default'}-${size || 'default'}`
+    return cart.value.some(item => getItemKey(item) === key)
+  }
 
   const subtotal = computed(() =>
     cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
