@@ -73,28 +73,7 @@
         </div>
 
         <!-- Size/Option Selection -->
-        <div v-if="product.variants?.length" class="size-section">
-          <div class="size-header">
-            <span class="size-label">Select {{ getVariantType(product.variants) }}</span>
-          </div>
-          <div class="size-grid">
-            <button
-              v-for="variant in product.variants"
-              :key="variant.variant_id"
-              class="size-btn"
-              :class="{
-                active: selectedVariant === variant.variant_id,
-                disabled: variant.stock === 0
-              }"
-              :disabled="variant.stock === 0"
-              @click="selectVariant(variant.variant_id)"
-            >
-              <span v-if="variant.hex" class="size-color" :style="{ backgroundColor: variant.hex }"></span>
-              <span v-else>{{ variant.name }}</span>
-            </button>
-          </div>
-        </div>
-
+       
         <!-- Actions -->
         <div class="action-buttons">
           <button class="btn-primary" @click="handleCartAction(product)">
