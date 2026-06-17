@@ -62,24 +62,21 @@
       "variants": [
         {
           "variant_id": "v1",
-          "name": "Black",
-          "hex": "#000000",
-          "price_adjustment": 2.0,
-          "image": "https://distausa.com/cdn/shop/files/71U9ZigeMQL_d3671852-f5e5-4236-afbf-e939d8762239_1024x.jpg?v=1773357942"
+          "name": "beauty berry Twin Turbo 2 in 1 Volumizing and Lengthening, Long Lasting Waterproof Mascara",
+          "hex": "#5D4037",
+          "price_adjustment": 3.0,
+          "image": ["https://rukminim2.flixcart.com/image/1536/1536/xif0q/mascara/a/n/z/-original-imahcz5khyukgszk.jpeg?q=90",
+          "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mascara/u/b/r/-original-imahcz5kdzhpghrq.jpeg?q=90",
+          "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mascara/v/t/l/-original-imahcz5kwyyatyyn.jpeg?q=90"]
         },
         {
           "variant_id": "v2",
-          "name": "Brown",
-          "hex": "#5D4037",
-          "price_adjustment": 3.0,
-          "image": "https://distausa.com/cdn/shop/files/61dfVCJb0xL_5ee01598-7eff-410b-b1ec-f8af38a8a999_1024x.jpg?v=1773358048"
-        },
-        {
-          "variant_id": "v3",
-          "name": "Blue",
+          "name": "SWISS BEAUTY Waterproof Volume Mascara | Smudge Proof Curling Mascara For Eye Makeup 8.5 ml",
           "hex": "#1E88E5",
           "price_adjustment": 1.0,
-          "image": "https://assets.myntassets.com/w_412,q_50,,dpr_3,fl_progressive,f_webp/assets/images/10849052/2023/8/30/1e0c1a32-8b76-4df4-b278-5c6d3633e17d1693397908221-Maybelline-New-York-Colossal-Volume-Express-Waterproof-Masca-1.jpg"
+          "image":[ "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mascara/p/q/w/15-2in1-volumizing-and-lengthening-long-lasting-mascara-mars-original-imahmjgwzgxh3ff8.jpeg?q=90",
+          "https://rukminim2.flixcart.com/image/1536/1536/xif0q/mascara/r/2/a/30-2-in1-volumizing-and-lengthening-long-lasting-mascara-pack-of-original-imahmjgwzs5fq4xn.jpeg?q=90" 
+          ]
         }
       ]
     },
@@ -147,19 +144,28 @@
           "variant_id": "v1",
           "name": "Warm Neutrals",
           "price_adjustment": 5.0,
-          "image": "https://insightcosmetics.in/cdn/shop/files/C_C01475.jpg?v=1720442798"
+          "stock": 12,
+          "image": [
+            "https://insightcosmetics.in/cdn/shop/files/C_C01475.jpg?v=1720442798"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "Cool Tones",
           "price_adjustment": 0,
-          "image": "https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//m/a/makeup-revolution-reloaded-eyeshadow-palette-affection-1-1g-x15.jpg"
+          "stock": 10,
+          "image": [
+            "https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//m/a/makeup-revolution-reloaded-eyeshadow-palette-affection-1-1g-x15.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "Smoky",
           "price_adjustment": 2.0,
-          "image": "https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//m/a/makeup-revolution-reloaded-eyeshadow-palette-velvet-rose-1-1g-x15.jpg"
+          "stock": 8,
+          "image": [
+            "https://static.beautytocare.com/cdn-cgi/image/width=1600,height=1600,f=auto/media/catalog/product//m/a/makeup-revolution-reloaded-eyeshadow-palette-velvet-rose-1-1g-x15.jpg"
+          ]
         }
       ]
     },
@@ -225,21 +231,30 @@
       "variants": [
         {
           "variant_id": "v1",
-          "name": "Standard",
+          "name": "Standard Powder Canister",
           "price_adjustment": 0,
-          "image": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRsOJceEgP_VqMhB_FelqglqWQN_5WhaUqm_krM_xkDJLvgYUQP-Ir4lcdQwHWelDQZtKK2GZjWYX5lfAdwn1sxZJ0hKaXISX1LDJmnjSC2YBmPTwenBXLO3w"
+          "stock": 30,
+          "image": [
+            "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRsOJceEgP_VqMhB_FelqglqWQN_5WhaUqm_krM_xkDJLvgYUQP-Ir4lcdQwHWelDQZtKK2GZjWYX5lfAdwn1sxZJ0hKaXISX1LDJmnjSC2YBmPTwenBXLO3w"
+          ]
         },
         {
           "variant_id": "v2",
-          "name": "Travel Size",
-          "price_adjustment": -5.0,
-          "image": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTWbl6S1IEgLGK7chp2xnw9iK7bQ9nrJTa-vTyr9Il5SmXLjoRLkicHL8vJ9McKD-y0NA_u4qYWpj8zQHqRsohS8T0yYueAeuFc6oJpY6pyNmcDIGq_EM2ZUA"
+          "name": "Travel Size Powder Canister",
+          "price_adjustment": -5,
+          "stock": 35,
+          "image": [
+            "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTWbl6S1IEgLGK7chp2xnw9iK7bQ9nrJTa-vTyr9Il5SmXLjoRLkicHL8vJ9McKD-y0NA_u4qYWpj8zQHqRsohS8T0yYueAeuFc6oJpY6pyNmcDIGq_EM2ZUA"
+          ]
         },
         {
           "variant_id": "v3",
-          "name": "Jumbo",
-          "price_adjustment": 5.0,
-          "image": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcR0C3xUxDxoRw2xRuCznyfpgBEfJZQzHUSugUqYUhHAhCeLH0gVmt6YjYCTo6Z9VgUTVmtQHKZIV8U483OIFufazdosW9akJ9h-3LdOnVb_nn7sQqITgDV9yA"
+          "name": "Jumbo Powder Canister",
+          "price_adjustment": 5,
+          "stock": 24,
+          "image": [
+            "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcR0C3xUxDxoRw2xRuCznyfpgBEfJZQzHUSugUqYUhHAhCeLH0gVmt6YjYCTo6Z9VgUTVmtQHKZIV8U483OIFufazdosW9akJ9h-3LdOnVb_nn7sQqITgDV9yA"
+          ]
         }
       ]
     },
@@ -308,21 +323,30 @@
           "name": "Classic Red",
           "hex": "#D32F2F",
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/1080059/ymlR2qLKpy8-1080059_1.jpg"
+          "stock": 40,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/1080059/ymlR2qLKpy8-1080059_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "Nude Pink",
           "hex": "#F48FB1",
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/Cds6kdfrYjX-1187231_1.jpg"
+          "stock": 30,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/Cds6kdfrYjX-1187231_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "Deep Berry",
           "hex": "#7B1FA2",
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/1124702/7D5TocxF6B-1124702_1.jpg"
+          "stock": 21,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/1124702/7D5TocxF6B-1124702_1.jpg"
+          ]
         }
       ]
     },
@@ -391,21 +415,30 @@
           "name": "Mulberry Jam",
           "hex": "#211a1e",
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/kA-PtUorsH-1195963_1.jpg"
+          "stock": 25,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/kA-PtUorsH-1195963_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "Color Crush Nailart",
           "hex": "#6f90c5",
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/949370/xW6frCwBI4M-949370_1.jpg"
+          "stock": 28,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/949370/xW6frCwBI4M-949370_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "Gold Dust",
           "hex": "#74432d",
           "price_adjustment": 1.5,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/G1FO1DOlo1r-1079969_1.jpg"
+          "stock": 18,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/G1FO1DOlo1r-1079969_1.jpg"
+          ]
         }
       ]
     },
@@ -474,30 +507,50 @@
         {
           "variant_id": "v1",
           "name": "30ml",
-          "size": "30ml",
-          "price_adjustment": -20.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          "size": [
+            "30ml"
+          ],
+          "price_adjustment": -20,
+          "stock": 10,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "50ml",
-          "size": "50ml",
+          "size": [
+            "50ml"
+          ],
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          "stock": 8,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "100ml",
-          "size": "100ml",
-          "price_adjustment": 25.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          "size": [
+            "100ml"
+          ],
+          "price_adjustment": 25,
+          "stock": 6,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          ]
         },
         {
           "variant_id": "v4",
           "name": "Gift Set",
-          "size": "50ml + Body Lotion",
-          "price_adjustment": 15.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          "size": [
+            "50ml + Body Lotion"
+          ],
+          "price_adjustment": 15,
+          "stock": 5,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          ]
         }
       ]
     },
@@ -566,30 +619,50 @@
         {
           "variant_id": "v1",
           "name": "30ml",
-          "size": "30ml",
-          "price_adjustment": -20.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          "size": [
+            "30ml"
+          ],
+          "price_adjustment": -20,
+          "stock": 12,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "50ml",
-          "size": "50ml",
+          "size": [
+            "50ml"
+          ],
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          "stock": 10,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "100ml",
-          "size": "100ml",
-          "price_adjustment": 25.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          "size": [
+            "100ml"
+          ],
+          "price_adjustment": 25,
+          "stock": 7,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          ]
         },
         {
           "variant_id": "v4",
           "name": "Gift Set",
-          "size": "50ml + Body Lotion",
-          "price_adjustment": 15.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          "size": [
+            "50ml + Body Lotion"
+          ],
+          "price_adjustment": 15,
+          "stock": 4,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          ]
         }
       ]
     },
@@ -658,30 +731,50 @@
         {
           "variant_id": "v1",
           "name": "30ml",
-          "size": "30ml",
-          "price_adjustment": -20.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          "size": [
+            "30ml"
+          ],
+          "price_adjustment": -20,
+          "stock": 15,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "50ml",
-          "size": "50ml",
+          "size": [
+            "50ml"
+          ],
           "price_adjustment": 0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          "stock": 10,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "100ml",
-          "size": "100ml",
-          "price_adjustment": 25.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          "size": [
+            "100ml"
+          ],
+          "price_adjustment": 25,
+          "stock": 8,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          ]
         },
         {
           "variant_id": "v4",
           "name": "Gift Set",
-          "size": "50ml + Body Lotion",
-          "price_adjustment": 15.0,
-          "image": "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          "size": [
+            "50ml"
+          ],
+          "price_adjustment": 15,
+          "stock": 5,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          ]
         }
       ]
     },
@@ -750,26 +843,50 @@
         {
           "variant_id": "v1",
           "name": "30ml",
-          "size": "30ml",
-          "price_adjustment": -20.0
+          "size": [
+            "30ml"
+          ],
+          "price_adjustment": -20,
+          "stock": 15,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "50ml",
-          "size": "50ml",
-          "price_adjustment": 0
+          "size": [
+            "50ml"
+          ],
+          "price_adjustment": 0,
+          "stock": 10,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "100ml",
-          "size": "100ml",
-          "price_adjustment": 25.0
+          "size": [
+            "100ml"
+          ],
+          "price_adjustment": 25,
+          "stock": 8,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          ]
         },
         {
           "variant_id": "v4",
           "name": "Gift Set",
-          "size": "50ml + Body Lotion",
-          "price_adjustment": 15.0
+          "size": [
+            "50ml"
+          ],
+          "price_adjustment": 15,
+          "stock": 5,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          ]
         }
       ]
     },
@@ -838,26 +955,50 @@
         {
           "variant_id": "v1",
           "name": "30ml",
-          "size": "30ml",
-          "price_adjustment": -20.0
+          "size": [
+            "30ml"
+          ],
+          "price_adjustment": -20,
+          "stock": 15,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:1080/K_-aaPs0Hq-1141594_1.jpg"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "50ml",
-          "size": "50ml",
-          "price_adjustment": 0
+          "size": [
+            "50ml"
+          ],
+          "price_adjustment": 0,
+          "stock": 10,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/ktAjuYCLt-1191513_1.jpg"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "100ml",
-          "size": "100ml",
-          "price_adjustment": 25.0
+          "size": [
+            "100ml"
+          ],
+          "price_adjustment": 25,
+          "stock": 8,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/MneYFt-jyV-945451_1.jpg"
+          ]
         },
         {
           "variant_id": "v4",
           "name": "Gift Set",
-          "size": "50ml + Body Lotion",
-          "price_adjustment": 15.0
+          "size": [
+            "50ml"
+          ],
+          "price_adjustment": 15,
+          "stock": 5,
+          "image": [
+            "https://cdn.tirabeauty.com/v2/billowing-snowflake-434234/tira-p/wrkr/products/pictures/item/free/resize-w:2360/SzBj0Sq6KI-1192756_1.jpg"
+          ]
         }
       ]
     },
@@ -925,30 +1066,47 @@
       "variants": [
         {
           "variant_id": "v1",
-          "name": "Queen",
-          "dimensions": {
-            "width": 152,
-            "length": 203
-          },
-          "price_adjustment": 0
+          "name": "Queen Size Bed",
+          "size": [
+            "152 cm x 203 cm"
+          ],
+          "price_adjustment": 0,
+          "stock": 12,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/bed/2/d/4/-original-imahjy87uj7mmefx.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/n/7/d/-original-imahnqurvhpgmuau.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/w/p/b/-original-imahhpkhncwhh4he.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/m/t/f/-original-imahnqursbegb6uh.jpeg?q=90"
+          ]
         },
         {
           "variant_id": "v2",
-          "name": "King",
-          "dimensions": {
-            "width": 193,
-            "length": 203
-          },
-          "price_adjustment": 400.0
+          "name": "King Size Bed",
+          "size": [
+            "193 cm x 203 cm"
+          ],
+          "price_adjustment": 400,
+          "stock": 8,
+          "image": [
+            "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/e/n/9/king-213-36-na-no-190-5-rosewood-sheesham-yes-50-sdh-fph-102-original-imahfey4gtkbtag4.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/o/f/m/king-213-36-na-no-190-5-rosewood-sheesham-yes-50-sdh-fph-102-original-imahfey49r5x4kez.jpeg?q=90"
+          ]
         },
         {
           "variant_id": "v3",
-          "name": "California King",
-          "dimensions": {
-            "width": 183,
-            "length": 213
-          },
-          "price_adjustment": 500.0
+          "name": "California King Bed",
+          "size": [
+            "183 cm x 213 cm"
+          ],
+          "price_adjustment": 500,
+          "stock": 5,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/bed/t/l/l/king-185-42-n-a-no-213-36-particle-board-yes-109-fn2313005-p-original-imahn99v3gcrc7vv.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/4/l/u/-original-imahnqurkmhqywfu.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/w/x/y/-original-imahhpkhgxmdzgby.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/bed/t/x/n/-original-imahnqurghavg3gd.jpeg?q=90"
+          ]
         }
       ]
     },
@@ -1012,27 +1170,51 @@
         "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/2.webp",
         "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/3.webp"
       ],
-      "thumbnail": "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/thumbnail.webp",
+      "thumbnail": "https://rukminim2.flixcart.com/image/612/612/xif0q/sofa-sectional/3/s/f/symmetrical-73-66-aqua-177-8-velvet-no-20-casa-wakesure-76-2-original-imahkuq6pe7zdqyr.jpeg?q=70",
       "variants": [
         {
           "variant_id": "v1",
-          "name": "2-Seater",
-          "price_adjustment": -500.0
+          "name": "Home wood 5 Seater Sofa",
+          "size": [
+            "152 cm x 203 cm"
+          ],
+          "price_adjustment": 0,
+          "stock": 12,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/sofa-sectional/3/s/f/symmetrical-73-66-aqua-177-8-velvet-no-20-casa-wakesure-76-2-original-imahkuq6pe7zdqyr.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/x/w/a/symmetrical-73-66-aqua-177-8-velvet-no-20-casa-wakesure-76-2-original-imahkuq6dzpwmhf6.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/7/j/0/symmetrical-73-66-aqua-177-8-velvet-no-20-casa-wakesure-76-2-original-imahkuq6yhqeqkh2.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/m/p/v/symmetrical-73-66-aqua-177-8-velvet-no-20-casa-wakesure-76-2-original-imahkuq6wghdeb9r.jpeg?q=90"
+          ]
         },
         {
           "variant_id": "v2",
-          "name": "3-Seater",
-          "price_adjustment": 0
+          "name": "WAKESURE Premium Quality Velvet Fabric 3 Seater  Sofa",
+          "size": [
+            "193 cm x 203 cm"
+          ],
+          "price_adjustment": 400,
+          "stock": 8,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/sofa-sectional/p/h/q/symmetrical-71-72-dark-black-grey-178-polycotton-no-30-5-fph-original-imahmhkgxpbf7uee.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/n/x/r/symmetrical-71-72-dark-black-grey-178-polycotton-no-30-5-201-original-imahjspzfsm2gkqb.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/m/9/i/symmetrical-71-72-dark-black-grey-178-polycotton-no-30-5-201-original-imahjspz2cyqprz5.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-set/q/k/u/69-85-0-golden-brown-chenille-3-1-1-180-34-0-77-47-38-22-0-original-imahyghkhkpbz2ks.jpeg?q=90"
+          ]
         },
         {
           "variant_id": "v3",
-          "name": "L-Shaped",
-          "price_adjustment": 600.0
-        },
-        {
-          "variant_id": "v4",
-          "name": "Sectional",
-          "price_adjustment": 900.0
+          "name": "Flipkart Perfect Homes Crete Leatherette",
+          "size": [
+            "183 cm x 213 cm"
+          ],
+          "price_adjustment": 500,
+          "stock": 5,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/sofa-sectional/i/1/t/symmetrical-103-white-74-silk-no-55-sofa-128-home-wood-264-white-original-imahckfgngzzeuyd.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/c/g/m/symmetrical-103-white-74-silk-no-55-sofa-128-home-wood-264-white-original-imahckfgf6bsqst2.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sofa-sectional/u/d/7/symmetrical-103-white-74-silk-no-55-sofa-128-home-wood-264-white-original-imahckfgn7rphqhh.jpeg?q=90"
+          ]
         }
       ]
     },
@@ -1097,118 +1279,58 @@
         "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/3.webp"
       ],
       "thumbnail": "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/thumbnail.webp",
-      "variants": [
+       "variants": [
         {
           "variant_id": "v1",
-          "name": "Oak",
-          "material": "Oak Wood",
-          "price_adjustment": 0
+          "name": "Yookeer Side Tables for Bedroom",
+          "size": [
+            "152 cm x 203 cm"
+          ],
+          "price_adjustment": 0,
+          "stock": 12,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/side-table/a/c/r/30-mdf-30-1-2-st1-side-table-classiconline-33-white-original-imah3etkgyjcrrgz.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/coffee-table/v/n/v/33-mango-wood-33-1-4-uc-12-uhud-crafts-6-5-white-original-imahccvkgaft8dvw.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/coffee-table/s/6/w/33-mango-wood-33-1-4-uc-12-uhud-crafts-6-5-white-original-imahccvkc2psxsrg.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/side-table/e/1/k/30-mdf-30-1-2-st1-side-table-classiconline-33-white-original-imah3etkbwfcekj4.jpeg?q=90"
+          ]
         },
         {
           "variant_id": "v2",
-          "name": "Walnut",
-          "material": "Walnut Wood",
-          "price_adjustment": 100.0
+          "name": "SPACEX Felix Multipurpose End Table",
+          "size": [
+            "193 cm x 203 cm"
+          ],
+          "price_adjustment": 400,
+          "stock": 8,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/side-table/m/7/q/25-mdf-40-4-7-bedside-table-for-bedroom-with-storage-engineered-original-imahn8gbyq6syp5q.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/side-table/z/6/r/25-mdf-40-4-7-bedside-table-for-bedroom-with-storage-engineered-original-imahn8gjpffrhzz9.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/side-table/m/h/r/25-mdf-40-4-7-bedside-table-for-bedroom-with-storage-engineered-original-imahn8gbcza3zmpn.jpeg?q=90"
+          ]
         },
         {
           "variant_id": "v3",
-          "name": "White Painted",
-          "material": "MDF",
-          "color": "White",
-          "price_adjustment": -50.0
+          "name": "NEUDOT KRUGER Engineered Wood Bedside Table",
+          "size": [
+            "183 cm x 213 cm"
+          ],
+          "price_adjustment": 500,
+          "stock": 5,
+          "image": [
+            "https://rukminim2.flixcart.com/image/612/612/xif0q/side-table/0/2/q/25-4-particle-board-40-64-5-5-side-table-hs09-side-table-nityam-original-imahj7y4qtck5dhh.jpeg?q=70",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/side-table/c/r/w/10-mdf-10-4-e8h48hc8e-bedside-table-yookeer-10-brown-original-imahh2b9bvs6hp9f.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/side-table/m/g/9/10-mdf-10-4-e8h48hc8e-bedside-table-yookeer-10-brown-original-imahh2b9zaa2zkvs.jpeg?q=90",
+            "https://rukminim2.flixcart.com/image/1536/1536/xif0q/side-table/m/e/i/10-mdf-10-4-e8h48hc8e-bedside-table-yookeer-10-brown-original-imahh2b9ahekchxy.jpeg?q=90"
+          ]
         }
       ]
     },
     {
       "id": 14,
-      "title": "Knoll Saarinen Executive Conference Chair",
-      "description": "The Knoll Saarinen Executive Conference Chair is a modern and ergonomic chair, perfect for your office or conference room with its timeless design.",
-      "category": "furniture",
-      "price": 499.99,
-      "discountPercentage": 2.01,
-      "rating": 4.88,
-      "stock": 26,
-      "tags": [
-        "furniture",
-        "office chairs"
-      ],
-      "brand": "Knoll",
-      "sku": "FUR-KNO-KNO-014",
-      "weight": 10,
-      "dimensions": {
-        "width": 13.81,
-        "height": 7.5,
-        "depth": 5.62
-      },
-      "warrantyInformation": "2 year warranty",
-      "shippingInformation": "Ships overnight",
-      "availabilityStatus": "In Stock",
-      "reviews": [
-        {
-          "rating": 2,
-          "comment": "Waste of money!",
-          "date": "2025-04-30T09:41:02.053Z",
-          "reviewerName": "Ella Cook",
-          "reviewerEmail": "ella.cook@x.dummyjson.com"
-        },
-        {
-          "rating": 2,
-          "comment": "Very dissatisfied!",
-          "date": "2025-04-30T09:41:02.053Z",
-          "reviewerName": "Clara Berry",
-          "reviewerEmail": "clara.berry@x.dummyjson.com"
-        },
-        {
-          "rating": 5,
-          "comment": "Would buy again!",
-          "date": "2025-04-30T09:41:02.053Z",
-          "reviewerName": "Elena Long",
-          "reviewerEmail": "elena.long@x.dummyjson.com"
-        }
-      ],
-      "returnPolicy": "60 days return policy",
-      "minimumOrderQuantity": 5,
-      "meta": {
-        "createdAt": "2025-04-30T09:41:02.053Z",
-        "updatedAt": "2025-04-30T09:41:02.053Z",
-        "barcode": "8919386859966",
-        "qrCode": "https://cdn.dummyjson.com/public/qr-code.png"
-      },
-      "images": [
-        "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/1.webp",
-        "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/2.webp",
-        "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/3.webp"
-      ],
-      "thumbnail": "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/thumbnail.webp",
-      "variants": [
-        {
-          "variant_id": "v1",
-          "name": "Fabric - Black",
-          "material": "Fabric",
-          "color": "Black",
-          "price_adjustment": 0
-        },
-        {
-          "variant_id": "v2",
-          "name": "Leather - Black",
-          "material": "Genuine Leather",
-          "color": "Black",
-          "price_adjustment": 150.0
-        },
-        {
-          "variant_id": "v3",
-          "name": "Mesh - Grey",
-          "material": "Mesh",
-          "color": "Grey",
-          "price_adjustment": -50.0
-        }
-      ]
-    },
-    {
-      "id": 15,
       "title": "Nike Air Max 270",
       "description": "Comfortable running shoes with breathable mesh upper and cushioned sole.",
-      "category": "shoes",
+      "category": "footwear",
       "price": 129.99,
       "discountPercentage": 10,
       "rating": 4.8,
@@ -1228,67 +1350,93 @@
         {
           "variant_id": "v1",
           "name": "Nike Downshifter 14",
-          "size": ["7", "8", "9"],
+          "size": [
+            "7",
+            "8",
+            "9"
+          ],
           "color": "Black",
           "hex": "#ffffff",
           "price_adjustment": 0,
           "stock": 8,
-          "image":[ "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_1.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_10.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_2.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_5.jpg?rnd=20200526195200&tr=w-1080"]
+          "image": [
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_1.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_10.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_2.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/b/ab828aaNike-DD1503-101_5.jpg?rnd=20200526195200&tr=w-1080"
+          ]
         },
         {
           "variant_id": "v2",
           "name": "Nike Quest 6",
-          "size": ["8", "9"],
+          "size": [
+            "8",
+            "9"
+          ],
           "color": "Black",
           "hex": "#000000",
           "price_adjustment": 0,
           "stock": 10,
-          "image": ["https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_1.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_2.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_4.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_6.jpg?rnd=20200526195200&tr=w-1080"]
+          "image": [
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_1.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_2.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_4.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-IQ3435-045_6.jpg?rnd=20200526195200&tr=w-1080"
+          ]
         },
         {
           "variant_id": "v3",
           "name": "White - Size 7",
-          "size": ["7", "8", "9"],
+          "size": [
+            "7",
+            "8",
+            "9"
+          ],
           "color": "White",
           "hex": "#b66c13",
           "price_adjustment": 5,
           "stock": 6,
-          "image": ["https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_1.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_2.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_3.jpg?rnd=20200526195200&tr=w-1080",
-           "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_5.jpg?rnd=20200526195200&tr=w-1080"]
+          "image": [
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_1.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_2.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_3.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/c/e/ce80759Nike-IB1895-102_5.jpg?rnd=20200526195200&tr=w-1080"
+          ]
         },
         {
           "variant_id": "v4",
           "name": "Nike P-6000",
-          "size": ["8", "9"],
+          "size": [
+            "8",
+            "9"
+          ],
           "color": "White",
           "hex": "#b9b4a1",
           "price_adjustment": 5,
           "stock": 9,
-          "image": ["https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_1.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_2.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_4.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_7.jpg?rnd=20200526195200&tr=w-1080"]
+          "image": [
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_1.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_2.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_4.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/3/5324c8eNike-FD6033-110_7.jpg?rnd=20200526195200&tr=w-1080"
+          ]
         },
         {
           "variant_id": "v5",
           "name": "Nike Free Metcon 7",
-          "size": ["9"],
+          "size": [
+            "9"
+          ],
           "color": "Blue",
           "hex": "#d0c0b7",
           "price_adjustment": 10,
           "stock": 5,
-          "image": ["https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_1.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_4.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_5.jpg?rnd=20200526195200&tr=w-1080",
-          "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_7.jpg?rnd=20200526195200&tr=w-1080"]
+          "image": [
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_1.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_4.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_5.jpg?rnd=20200526195200&tr=w-1080",
+            "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/8/2/823a50dNike-II7406-610_7.jpg?rnd=20200526195200&tr=w-1080"
+          ]
         }
       ]
     }

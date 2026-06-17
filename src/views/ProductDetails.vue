@@ -54,7 +54,7 @@
               :class="{ active: selectedSize === size }"
               @click="selectedSize = size"
             >
-              UK {{ size }}
+              <p v-if="product.category === 'footwear'">UK</p> {{ size }}
             </button>
           </div>
         </div>
@@ -68,7 +68,7 @@
             :class="{ active: selectedVariant === variant.variant_id }"
             @click="selectVariant(variant.variant_id)"
           >
-            <img :src="variant.image || product.thumbnail" :alt="selectedVariant.name" />
+            <img :src="variant.image?.[0] || product.thumbnail" :alt="selectedVariant.name" />
           </div>
         </div>
 

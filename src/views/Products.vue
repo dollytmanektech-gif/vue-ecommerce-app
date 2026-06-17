@@ -55,7 +55,7 @@
             </span>
           </div>
 
-          <button class="clear-btn" @click="clearFilters">Clear Filters</button>
+          <button  v-if="isFilterApplied" class="clear-btn" @click="clearFilters">Clear Filters</button>
         </aside>
 
         <!-- RIGHT CONTENT -->
@@ -261,6 +261,7 @@ import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
 import { useWishlistStore } from "../stores/wishlist";
 import productsData from "../data/products_with_variants.json"; // adjust path
+import { useAuthStore } from "../stores/auth";
 
 // Search and filter state
 const searchQuery = ref("");
@@ -268,6 +269,7 @@ const selectedCategory = ref("all");
 const router = useRouter();
 const priceRange = ref(5000);
 const minRating = ref(0);
+const authStore = useAuthStore();
 const brands = computed(() => {
   return [...new Set(products.value.map((p) => p.brand))].filter(Boolean);
 });
@@ -281,7 +283,18 @@ const categories = [
   { name: "Furniture", slug: "furniture" },
   { name: "Fragrances", slug: "fragrances" },
   { name: "Beauty", slug: "beauty" },
+  { name: "Footwear", slug: "footwear" },
 ];
+const isFilterApplied = computed(() => {
+  return (
+    priceRange.value < 5000 ||
+    Number(minRating.value) > 0 ||
+    selectedBrands.value.length > 0 ||
+    Number(discountRange.value) > 0 ||
+    selectedCategory.value !== "all" ||
+    searchQuery.value.trim() !== ""
+  );
+});
 
 // Products data
 const products = ref([]);
@@ -420,7 +433,7 @@ const filteredProducts = computed(() => {
   return products.value.filter((product) => {
     const matchesCategory =
       selectedCategory.value === "all" ||
-      product.categorySlug === selectedCategory.value;
+      product.category === selectedCategory.value;
 
     const matchesSearch =
       !searchQuery.value ||
@@ -478,6 +491,14 @@ function handleCartAction(product) {
 }
 
 const wishlistStore = useWishlistStore();
+function handleWishlist(product) {
+  if (!authStore.isAuthenticated) {
+    router.push("/login");
+    return;
+  }
+
+  wishlistStore.addToWishlist(product);
+}
 const selectedVariants = reactive({});
 
 function toggleWishlist(product) {
@@ -490,6 +511,7 @@ function isInWishlist(productId) {
 function selectVariant(productId, variantId) {
   selectedVariants[productId] = variantId;
 }
+
 function getProductPrice(product) {
   const selectedId = selectedVariants[product.id];
   if (!selectedId) return product.price.toFixed(2);
@@ -1231,6 +1253,7 @@ onMounted(() => {
 .variant-label {
   font-size: 13px;
   font-weight: 500;
+  color:#111;
 }
 
 /* Size Grid */
