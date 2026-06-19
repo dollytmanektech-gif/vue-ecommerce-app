@@ -1,7 +1,6 @@
 <template>
   <div class="page-wrapper">
     <Navbar />
-
     <main class="content">
       <div class="checkout-page">
         <h2>Checkout</h2>
@@ -14,7 +13,9 @@
             <strong>${{ subtotal.toFixed(2) }}</strong>
           </div>
           <div class="row" v-if="coupon?.code">
-            <span>Coupon <strong>{{ coupon.code }}</strong></span>
+            <span
+              >Coupon <strong>{{ coupon.code }}</strong></span
+            >
             <strong class="discount">- ${{ discountAmount.toFixed(2) }}</strong>
           </div>
           <div class="row total">
@@ -77,12 +78,36 @@
             <p v-if="errors.zip" class="error">{{ errors.zip }}</p>
           </div>
 
-          <button class="place-order-btn" type="submit" :disabled="hasErrors">
-            Place Order
-          </button>
+          <div class="payment-section" v-if="cart.length > 0">
+            <p class="payment-note">
+              Simulated PayPal flow for learning Vue (no real charges).
+            </p>
+            <button
+              type="button"
+              class="paypal-btn"
+              :disabled="isPaying || total <= 0"
+              @click="startPayPalCheckout"
+            >
+              <span v-if="isPaying" class="btn-loader"></span>
+              <span v-else>Pay with PayPal</span>
+            </button>
+          </div>
+
+          <p v-else class="empty-cart-note">Add items to your cart before paying.</p>
         </form>
       </div>
     </main>
+
+    <PayPalMockModal
+      :show="showPayPalModal"
+      :step="paymentStep"
+      :amount="total"
+      :payer-email="form.email"
+      :error-message="paymentError"
+      @approve="approvePayment"
+      @cancel="cancelPayment"
+      @close="closePayPalModal"
+    />
 
     <Footer />
   </div>
@@ -90,11 +115,13 @@
 
 
 <script setup>
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCart } from "../composables/useCart";
+import { usePayPalMock } from "../composables/usePayPalMock";
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
+import PayPalMockModal from "../components/PayPalMockModal.vue";
 import { useAuthStore } from "../stores/auth";
 import { useOrderStore } from "../stores/order";
 
@@ -104,6 +131,97 @@ const { clearCart, cart, coupon, subtotal, discountAmount, total } = useCart();
 const authStore = useAuthStore();
 const orderStore = useOrderStore();
 
+const {
+  step: paymentStep,
+  errorMessage: paymentError,
+  createOrder,
+  captureOrder,
+  cancelPayment: resetCancelledPayment,
+  reset: resetPayment,
+} = usePayPalMock();
+
+const showPayPalModal = ref(false);
+
+const isPaying = computed(() =>
+  ["creating", "capturing"].includes(paymentStep.value)
+);
+
+function validateCheckoutForm() {
+  validateName();
+  validateEmail();
+  validateAddress();
+  validateCity();
+  validateZip();
+  return !hasErrors.value;
+}
+
+async function startPayPalCheckout() {
+  if (!validateCheckoutForm()) return;
+
+  if (!authStore.isAuthenticated) {
+    router.push({ path: "/login", query: { redirect: "/checkout" } });
+    return;
+  }
+
+  if (cart.value.length === 0 || total.value <= 0) return;
+
+  resetPayment();
+  showPayPalModal.value = true;
+
+  try {
+    await createOrder({ amount: total.value, currency: "USD" });
+  } catch {
+    // error state handled by composable
+  }
+}
+
+async function approvePayment() {
+  try {
+    const details = await captureOrder({
+      payerName: form.name,
+      payerEmail: form.email,
+    });
+
+    orderStore.addOrder({
+      id: "ORD-" + Date.now(),
+      paymentId: details.id,
+      items: [...cart.value],
+      subtotal: subtotal.value,
+      coupon: coupon.value?.code || null,
+      discount: discountAmount.value,
+      total: total.value,
+      status: "completed",
+      date: new Date().toISOString(),
+      paymentMethod: "paypal (demo)",
+      customer: {
+        name: form.name,
+        email: form.email,
+        address: form.address,
+        city: form.city,
+        zip: form.zip,
+      },
+    });
+
+    clearCart();
+    showPayPalModal.value = false;
+    resetPayment();
+
+    const firstName = details.payer?.name?.given_name || "Customer";
+    alert(`Payment completed! Thank you, ${firstName}.`);
+    router.push("/orders");
+  } catch {
+    // error state handled by composable
+  }
+}
+
+function cancelPayment() {
+  resetCancelledPayment();
+}
+
+function closePayPalModal() {
+  showPayPalModal.value = false;
+  resetPayment();
+}
 const form = reactive({
   name: "",
   email: "",
@@ -161,39 +279,8 @@ const hasErrors = computed(() => {
 });
 
 function placeOrder() {
-  validateName();
-  validateEmail();
-  validateAddress();
-  validateCity();
-  validateZip();
-
-  if (hasErrors.value) return;
-
-  if (!authStore.isAuthenticated) {
-    router.push("/login");
-    return;
-  }
-
-  const order = {
-    id: `ORD-${Date.now()}`,
-    date: new Date().toLocaleDateString(),
-    status: "Confirmed",
-    customer: { ...form },
-    items: cart.value,
-    subtotal: subtotal.value,
-    discount: discountAmount.value,
-    coupon: coupon.value?.code || null,
-    total: total.value,
-  };
-
-  orderStore.addOrder(order);
-
-  clearCart();
-
-  alert("✅ Your order is confirmed!");
-  router.push("/orders");
+  startPayPalCheckout();
 }
-
 </script>
 <style scoped>
 .page-wrapper {
@@ -323,5 +410,111 @@ function placeOrder() {
 .place-order-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.payment-section {
+  margin-top: 8px;
+}
+
+.payment-note {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.empty-cart-note {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+
+.paypal-btn {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 24px;
+  background: #ffc439;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.paypal-btn:hover:not(:disabled) {
+  background: #f2b925;
+}
+
+.paypal-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn-loader {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(0, 0, 0, 0.15);
+  border-top-color: #111827;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.payment-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.payment-box {
+  background: white;
+  width: 350px;
+  border-radius: 14px;
+  padding: 25px;
+  text-align: center;
+}
+
+.payment-box h2 {
+  margin-bottom: 15px;
+}
+
+.payment-box h3 {
+  color: #736fc2;
+  margin-bottom: 20px;
+}
+
+.payment-box button {
+  margin: 8px;
+  padding: 10px 20px;
+  border: none;
+  background: #736fc2;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.loader {
+  width: 45px;
+  height: 45px;
+  border: 5px solid #ddd;
+  border-top-color: #736fc2;
+  border-radius: 50%;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
