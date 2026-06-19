@@ -28,7 +28,7 @@
         <div class="order-footer">
           <div class="totals">
             <p v-if="order.subtotal != null" class="meta">
-              Subtotal: ${{ order.subtotal }}
+              Subtotal: ${{ Number(order.subtotal).toFixed(2) }}
               <span v-if="order.coupon"> • Coupon: {{ order.coupon }}</span>
               <span v-if="order.discount != null && order.discount > 0">
                 • Discount: -${{ Number(order.discount).toFixed(2) }}

@@ -229,7 +229,7 @@
                 :class="{ active: modalSelectedSize === size }"
                 @click="modalSelectedSize = size"
               >
-                UK {{ size }}
+                <p v-if="selectedProduct?.category === 'footwear'">UK</p> {{ size }}
               </button>
             </div>
           </div>
